@@ -1,0 +1,9 @@
+json.id item.id
+json.name item.name
+json.completed item.completed
+json.detailPath item_path(item)
+json.toggleForm do
+  form_props(model: item) do |f|
+    f.submit "Toggle"
+  end
+end

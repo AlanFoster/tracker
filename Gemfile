@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+gem "vite_rails"
+gem "superglue", "2.0.0.alpha.8"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
@@ -51,6 +53,8 @@ group :development, :test do
 end
 
 group :development do
+  gem "better_errors"
+  gem "binding_of_caller"
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end

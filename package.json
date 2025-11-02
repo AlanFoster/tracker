@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.9.2",
+    "@thoughtbot/superglue": "2.0.0-alpha.8",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-redux": "^9.2.0"
+  },
+  "devDependencies": {
+    "@thoughtbot/candy_wrapper": "^0.0.4",
+    "@types/node": "^24.9.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "vite": "^5.0.0",
+    "vite-plugin-ruby": "^5.1.0"
+  }
+}

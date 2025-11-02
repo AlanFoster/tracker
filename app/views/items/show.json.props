@@ -1,0 +1,7 @@
+json.itemDetails do
+  json.name @item.name
+  json.completed @item.completed
+  json.addedAt @item.created_at.strftime("%B %d, %Y at %I:%M %p")
+end
+
+json.backPath root_path
