@@ -33,6 +33,10 @@ import {
   ValidationErrors,
   SubmitProps as RailsSubmitButton,
 } from '@thoughtbot/candy_wrapper'
+import {
+  Button as MuiButton,
+  TextField as MuiTextField
+} from "@mui/material";
 
 export const ValidationContext = createContext<ValidationErrors>({})
 
@@ -141,7 +145,7 @@ export const FieldBase = ({
   return (
     <>
       <label htmlFor={props.id}>{label}</label>
-      {children || <input {...props} />}
+      {children || <MuiTextField slotProps={{ htmlInput: props}} />}
       <FieldError errorKey={errorKey} />
     </>
   )
@@ -546,9 +550,6 @@ export const SubmitButton = ({
   ...rest
 }: SubmitButtonProps) => {
   return (
-    <button {...rest} type="submit">
-      {' '}
-      {text}{' '}
-    </button>
+      <MuiButton {...rest} variant="outlined" type="submit">{text}</MuiButton>
   )
 }

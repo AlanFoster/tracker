@@ -10,11 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_01_231852) do
-  create_table "items", force: :cascade do |t|
-    t.boolean "completed"
+ActiveRecord::Schema[8.1].define(version: 2025_11_02_202457) do
+  create_table "ascents", force: :cascade do |t|
+    t.integer "color"
     t.datetime "created_at", null: false
-    t.string "name"
+    t.integer "session_id", null: false
+    t.integer "tries"
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_ascents_on_session_id"
+  end
+
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "description"
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "ascents", "sessions"
 end

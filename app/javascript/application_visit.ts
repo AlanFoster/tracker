@@ -4,6 +4,7 @@ import {
   SuperglueStore,
   BuildVisitAndRemote,
 } from "@thoughtbot/superglue";
+import { requestStripe } from 'request-stripe';
 import { visit, remote } from "@thoughtbot/superglue/action_creators";
 
 /**
@@ -32,7 +33,10 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
      *
      * This would be available as `sgHideProgress` on the dataset
      */
-    return store.dispatch(remote(path, options));
+    const done = requestStripe()
+    alert('a')
+    return store.dispatch(remote(path, options))
+        .finally(() => done());
   };
 
   const appVisit: ApplicationVisit = (path, { dataset, ...options } = {}) => {
@@ -43,6 +47,7 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
      * Hint: you can access the current pageKey
      * via `store.getState().superglue.currentPageKey`
      */
+    const done = requestStripe()
     return store
       .dispatch(visit(path, options))
       .then((meta) => {
@@ -81,6 +86,7 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
          *
          * This is where you hide a progress bar.
          */
+        done()
       })
       .catch((err) => {
         const response = err.response;

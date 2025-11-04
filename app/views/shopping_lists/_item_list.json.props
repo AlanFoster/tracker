@@ -1,5 +1,0 @@
-json.array!(
-  @items,
-  partial: ['item', fragment: ->(item) { dom_id(item) }]
-) do |item|
-end

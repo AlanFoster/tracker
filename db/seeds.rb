@@ -8,12 +8,70 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-Item.create!(
+def as_ascents(colors, base_time)
+  all_colors = colors.flat_map do |color, count|
+    [color] * count
+  end
+  all_colors.map.with_index do |color, index|
+    { color: color, tries: 0, created_at: base_time + 2.days + index.minutes }
+  end
+end
+
+ascents_data = [
   [
-    { name: "Milk", completed: false },
-    { name: "Bread", completed: true },
-    { name: "Eggs", completed: false },
-    { name: "Apples", completed: false },
-    { name: "Cheese", completed: true }
-  ]
-)
+    [:white, 1],
+    [:green, 2],
+    [:yellow, 1],
+    [:green, 1],
+    [:yellow, 5],
+
+    [:yellow, 1],
+    [:purple, 2],
+    [:yellow, 2],
+    [:purple, 1],
+    [:yellow, 1],
+    [:purple, 1],
+    [:yellow, 2],
+
+    [:purple, 2],
+    [:yellow, 1],
+    [:red, 1],
+    [:yellow, 1],
+    [:purple, 1],
+    [:yellow, 2],
+  ],
+  [
+    [:white, 7],
+    [:green, 3],
+
+    [:white, 1],
+    [:green, 1],
+    [:white, 2],
+    [:green, 1],
+    [:white, 5],
+
+    [:white, 9],
+  ],
+]
+
+epoch = Time.zone.parse("2025-01-01 00:00:00")
+sessions = 15.times.map do |x|
+  {
+    description: 'session',
+    ascents: as_ascents(
+      ascents_data[x % ascents_data.length],
+      epoch + x.days
+    ),
+    created_at: epoch + x.days
+  }
+end
+
+sessions.each do |session|
+  session_record = Session.find_or_create_by!(created_at: session[:created_at])
+  session_record.update!(session.without(:created_at, :ascents))
+  session[:ascents].each do |ascent|
+    session_record.ascents
+                  .find_or_create_by!(tries: 0, created_at: ascent[:created_at])
+                  .update!(ascent.without(:created_at))
+  end
+end

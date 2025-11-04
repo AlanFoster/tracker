@@ -1,0 +1,56 @@
+import {Button} from "@mui/material";
+import React from "react";
+import {ascentColors} from "@javascript/components/ascentColors";
+
+type BlockProps = {
+    href: string
+    color: keyof typeof ascentColors
+    title: string
+    children: React.ReactNode
+    renderLink: boolean
+}
+
+export const AscentBlock = ({href, color, title, children, renderLink = true }: BlockProps) => {
+    const button = <Button
+        title={title}
+        variant='contained'
+        disabled={!renderLink}
+        style={{
+            backgroundColor: ascentColors[color] || 'red',
+            display: 'inline-block',
+            textAlign: 'center',
+            color: (color === 'white' || color === 'yellow') ? 'black' : 'white'
+        }}>
+        {children}
+    </Button>
+
+    return (
+        renderLink ? <a href={href}>
+            {button}
+        </a> : button
+    );
+}
+
+export const AscentBlockChart = ({ascents, href = undefined, children = undefined, renderLink = true}) => {
+    return (
+        <span
+            style={{
+                display: 'inline-grid',
+                gridTemplateColumns: 'repeat(10, max-content)',
+                gap: '10px',
+            }}>
+            {children}
+            {ascents.map((ascent, index) =>
+                <AscentBlock
+                    key={ascent.id}
+                    color={ascent.color}
+                    href={href || ascent.editPath}
+                    title={`${ascent.tries === 0 ? 'flash' : ascent.tries} ${ascent.createdAt}`}
+                    renderLink={renderLink}
+                >
+                    {index + 1}
+                </AscentBlock>
+            )}
+        </span>
+    )
+}

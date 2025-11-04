@@ -1,0 +1,9 @@
+json.newAscentForm do
+  form_props(model: @ascent, url: session_ascents_path(@session)) do |f|
+    f.select :color, Ascent.colors.keys
+    f.text_field :tries
+    f.submit "Add"
+  end
+end
+
+json.backPath session_path(@ascent.session)

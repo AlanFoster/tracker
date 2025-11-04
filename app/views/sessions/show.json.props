@@ -1,0 +1,11 @@
+json.session(
+  partial: [
+    'session',
+    fragment: 'session',
+    locals: {
+      session: @session
+    }
+  ]) do
+end
+
+json.backPath root_path

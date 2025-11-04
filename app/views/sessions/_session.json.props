@@ -1,0 +1,18 @@
+json.id session.id
+json.title session.title
+json.description session.description
+json.createdAt session.created_at
+json.summary do
+  json.counts session.ascents.group(:color).order(count_all: :desc).count
+end
+json.ascents do
+  json.array! session.ascents do |ascent|
+    json.id ascent.id
+    json.color ascent.color
+    json.tries ascent.tries
+    json.createdAt ascent.created_at
+    json.editPath edit_session_ascent_path(session, ascent)
+  end
+end
+json.newAscentPath new_session_ascent_path(session.id)
+json.detailPath session_path(session.id)
