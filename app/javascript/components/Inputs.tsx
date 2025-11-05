@@ -143,11 +143,11 @@ export const FieldBase = ({
   ...props
 }: FieldBaseProps) => {
   return (
-    <>
-      <label htmlFor={props.id}>{label}</label>
-      {children || <MuiTextField slotProps={{ htmlInput: props}} />}
-      <FieldError errorKey={errorKey} />
-    </>
+      <>
+        <label htmlFor={props.id}>{label}</label>
+        {children || <MuiTextField slotProps={{ htmlInput: props}} />}
+        <FieldError errorKey={errorKey} />
+      </>
   )
 }
 
@@ -275,8 +275,22 @@ export type TextFieldProps = React.InputHTMLAttributes<HTMLInputElement> &
  * Designed to work with a payload form_props's [text_field helper](https://github.com/thoughtbot/form_props?tab=readme-ov-file#text-helpers).
  * Mimics the rails equivalent. Please modify to your liking.
  */
-export const TextField = ({ type: _type, ...rest }: TextFieldProps) => {
-  return <FieldBase {...rest} type="text" />
+export const TextField = ({   label,
+  errorKey,
+  children,
+  type: _type,
+  ...rest }: TextFieldProps) => {
+  const errorMessage = useErrorMessage(errorKey)
+
+  return (
+    <MuiTextField
+        label={label}
+        error={!!errorMessage}
+        // slotProps={{ htmlInput: rest}}
+        helperText={errorMessage}
+        {...rest}
+    />
+  )
 }
 
 export type EmailFieldProps = React.InputHTMLAttributes<HTMLInputElement> &

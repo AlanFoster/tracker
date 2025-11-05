@@ -1,16 +1,28 @@
 import React, {ReactNode} from 'react'
 import {useAppSelector} from '@javascript/store'
-import {Box, Container} from "@mui/material";
+import {
+    Alert,
+    Box,
+    Container,
+    createTheme,
+    IconButton,
+    styled,
+    ThemeProvider,
+    Toolbar,
+    Typography
+} from "@mui/material";
+import AppBar from '@mui/material/AppBar';
+import CssBaseline from '@mui/material/CssBaseline';
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { hasError: false };
+        this.state = {hasError: false};
     }
 
     static getDerivedStateFromError(error) {
         // Update state so the next render will show the fallback UI.
-        return { hasError: true };
+        return {hasError: true};
     }
 
     componentDidCatch(error, info) {
@@ -37,19 +49,53 @@ class ErrorBoundary extends React.Component {
     }
 }
 
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
+
+const Offset = styled('div')(({theme}) => theme.mixins.toolbar);
+
 export const Layout = ({children}: { children: ReactNode }) => {
     const flash = useAppSelector((state) => state.flash)
 
     return (
         <ErrorBoundary fallback={<p>Something went wrong</p>}>
-            <Container maxWidth="lg">
+            <ThemeProvider theme={darkTheme}>
+                <CssBaseline/>
+                <AppBar component="nav">
+                    <Toolbar>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            sx={{mr: 2, display: {sm: 'none'}}}
+                        >
+                        </IconButton>
+                        <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{flexGrow: 1, display: {sm: 'block'}}}
+                        >
+                            Tracker
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <Offset/>
+                <Container maxWidth="lg">
+                    <Box pt={4}>
+                        {flash.success &&
+                            <Box mb={2}><Alert variant='filled' severity='success'>{flash.success}</Alert></Box>}
+                        {flash.notice &&
+                            <Box mb={2}><Alert variant='filled' severity='info'>{flash.notice}</Alert></Box>}
+                        {flash.error &&
+                            <Box mb={2}><Alert variant='filled' severity='error'>{flash.error}</Alert></Box>}
 
-                {flash.success && <p>{flash.success}</p>}
-                {flash.notice && <p>{flash.notice}</p>}
-                {flash.error && <p>{flash.error}</p>}
-
-                {children}
-            </Container>
+                        {children}
+                    </Box>
+                </Container>
+            </ThemeProvider>
         </ErrorBoundary>
     )
 }

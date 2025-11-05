@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   root 'sessions#index'
-  resources :sessions, only: [:index, :new, :create, :show] do
+  resources :sessions, only: [:index, :new, :create, :show, :destroy] do
     resources :ascents, only: [:new, :edit, :create, :update]
   end
 end

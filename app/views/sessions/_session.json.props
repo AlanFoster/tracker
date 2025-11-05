@@ -3,8 +3,21 @@ json.title session.title
 json.description session.description
 json.createdAt session.created_at
 json.summary do
-  json.counts session.ascents.group(:color).order(count_all: :desc).count
+  ascent_counts = session.ascents.group(:color).count
+  ascent_counts_sorted = Ascent.colors.filter_map do |color, _ordinal|
+    next unless ascent_counts[color]
+
+    [color, ascent_counts[color]]
+  end
+  json.ascentCounts do
+    json.array! ascent_counts_sorted do |(color, count)|
+      json.title "#{color.titleize} ascents"
+      json.color color
+      json.value count
+    end
+  end
 end
+
 json.ascents do
   json.array! session.ascents do |ascent|
     json.id ascent.id
@@ -12,6 +25,12 @@ json.ascents do
     json.tries ascent.tries
     json.createdAt ascent.created_at
     json.editPath edit_session_ascent_path(session, ascent)
+  end
+end
+
+json.deleteForm do
+  form_props(url: session_path(session), method: :delete) do |f|
+    f.submit 'remove'
   end
 end
 json.newAscentPath new_session_ascent_path(session.id)

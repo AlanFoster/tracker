@@ -1,61 +1,72 @@
-import React from 'react'
-import {useContent} from '@thoughtbot/superglue'
-import {AscentBlockChart} from "@javascript/components/AscentBlocks";
+import React, {useContext} from 'react'
+import {useContent, NavigationContext} from '@thoughtbot/superglue'
 import {
     Box,
-    Card,
-    CardActionArea,
-    CardContent, CardHeader,
-    Container,
-    Divider,
     Link,
-    List,
-    ListItem,
     Typography
 } from '@mui/material';
 import {Layout} from "@javascript/components";
 import SessionForm from './SessionForm'
+import SessionsSummary from './SessionsSummary'
 import {useAppSelector} from "@javascript/store";
+import SessionCard from "@javascript/components/SessionCard";
 
 export default function SessionsIndex() {
-    const {sessions, newSessionPath, createSessionModal} = useContent() as any
+    const {sessions, newSessionPath, createSessionModal, sessionSummary} = useContent() as any
+    const {visit} = useContext(NavigationContext)
     const validationErrors = useAppSelector((state) => state.flash.postFormErrors)
 
     return (
         <Layout>
-            <Link
-                href={newSessionPath}
-                data-sg-visit
-            >
-                New Session
-            </Link>
-            <SessionForm
-                sessionForm={createSessionModal.newSessionForm}
-                showModal={createSessionModal.showModal}
-                validationErrors={validationErrors}
-            />
-            <Typography variant='h5'>
-                Sessions
-            </Typography>
-            {sessions.map(session => (
-                <Card key={session.id} sx={{mb: 4}}>
-                    <CardActionArea href={session.detailPath} data-sg-visit>
-                        <CardHeader title={session.title} />
-                        <CardContent sx={{ textAlign: 'center' }}>
-                            <AscentBlockChart
-                                ascents={session.ascents}
-                                renderLink={false}
-                            />
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            ))}
-            <Link
-                href={newSessionPath}
-                data-sg-visit
-            >
-                New Session
-            </Link>
+            <Box mb={4}>
+                <Typography variant='h4'>
+                    Overview
+                </Typography>
+                <SessionForm
+                    sessionForm={createSessionModal.newSessionForm}
+                    showModal={createSessionModal.showModal}
+                    validationErrors={validationErrors}
+                    onClose={() => visit('/')}
+                />
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <SessionsSummary {...sessionSummary}   />
+                </Box>
+            </Box>
+
+            <Box>
+                <Typography variant='h5'>
+                    Sessions
+                </Typography>
+
+                {sessions.length === 0 ?
+                    <Typography>
+                        No sessions created yet.{' '}
+                        <Link
+                            href={newSessionPath}
+                            data-sg-visit
+                        >
+                            Create your first session.
+                        </Link>
+                    </Typography>
+                    : <Link
+                        href={newSessionPath}
+                        data-sg-visit
+                    >
+                        New Session
+                    </Link>
+                }
+
+                {sessions.map(session => (
+                    <SessionCard
+                        key={session.id}
+                        session={session}
+                    />
+                ))}
+            </Box>
         </Layout>
     )
 }

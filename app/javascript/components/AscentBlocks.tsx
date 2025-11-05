@@ -1,4 +1,4 @@
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import React from "react";
 import {ascentColors} from "@javascript/components/ascentColors";
 
@@ -10,7 +10,7 @@ type BlockProps = {
     renderLink: boolean
 }
 
-export const AscentBlock = ({href, color, title, children, renderLink = true }: BlockProps) => {
+export const AscentBlock = ({href, color, title, children, renderLink = true}: BlockProps) => {
     const button = <Button
         title={title}
         variant='contained'
@@ -32,13 +32,22 @@ export const AscentBlock = ({href, color, title, children, renderLink = true }: 
 }
 
 export const AscentBlockChart = ({ascents, href = undefined, children = undefined, renderLink = true}) => {
+    if (ascents.length === 0) {
+        return (
+            <Typography mt={10} mb={10}>
+                No ascents registered yet.
+            </Typography>
+        )
+    }
+
     return (
         <span
             style={{
                 display: 'inline-grid',
                 gridTemplateColumns: 'repeat(10, max-content)',
                 gap: '10px',
-            }}>
+            }}
+        >
             {children}
             {ascents.map((ascent, index) =>
                 <AscentBlock

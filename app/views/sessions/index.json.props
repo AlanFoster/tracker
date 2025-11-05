@@ -1,11 +1,21 @@
 json.sessions(partial: ["sessions_list", fragment: "sessions_list"]) do
 end
 
+json.sessionSummary do
+  session_count = Session.count
+  ascent_count = Ascent.count
+
+  json.totalSessions session_count
+  json.totalAscents ascent_count
+  json.averageAscents session_count == 0 ? 0 : (ascent_count / session_count).round(2)
+end
+
 json.createSessionModal do
   json.newSessionForm do
     if @session
+      # , props_at: 'data.createSessionModal.newSessionForm'
       form_props(model: @session, url: sessions_path(@session)) do |f|
-        f.text_field :session
+        f.text_field :description
         f.submit "Add"
       end
     end

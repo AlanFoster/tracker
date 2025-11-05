@@ -1,8 +1,8 @@
 class AscentsController < ApplicationController
-  before_action :set_session!, only: [:new, :edit, :create]
+  before_action :set_session!, only: [:new, :edit, :update, :create]
 
   def new
-    @ascent = @session.ascents.new color: @session.ascents.last.color
+    @ascent = @session.ascents.new color: @session.ascents.last&.color || Ascent.colors.values[0]
   end
 
   def edit

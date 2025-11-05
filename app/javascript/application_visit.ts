@@ -34,7 +34,6 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
      * This would be available as `sgHideProgress` on the dataset
      */
     const done = requestStripe()
-    alert('a')
     return store.dispatch(remote(path, options))
         .finally(() => done());
   };

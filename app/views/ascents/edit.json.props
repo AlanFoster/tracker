@@ -1,8 +1,8 @@
 json.editAscentForm do
-  form_props(model: @ascent, url: session_ascents_path(@session)) do |f|
+  form_props(model: @ascent, url: session_ascent_path(@session, @ascent)) do |f|
     f.select :color, Ascent.colors.keys
     f.text_field :tries
-    f.submit "Add"
+    f.submit 'Update'
   end
 end
 

@@ -2,39 +2,65 @@ import React from 'react'
 import {useContent} from '@thoughtbot/superglue'
 import ShareButton from '@javascript/components/ShareButton'
 import {colorsAsEmojis} from "@javascript/components/Emoji";
-import {AscentBlock, AscentBlockChart} from "@javascript/components/AscentBlocks";
-import ReportSummary from "@views/sessions/Summary";
+import {AscentBlockChart} from "@javascript/components/AscentBlocks";
+import ReportSummary from "./AscentsSummary";
 import {Layout} from "@javascript/components";
-import { Box } from '@mui/material';
+import {Box, Breadcrumbs, Button, Card, CardContent, CardHeader, Link, Stack, Typography} from '@mui/material';
 
 export default function SessionsShow() {
     const {session, backPath} = useContent() as any
 
     return (
         <Layout>
-            <div>
-                <a href={backPath} data-sg-visit>← Back</a>
-            </div>
+            <Stack spacing={2}>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link
+                        underline="hover"
+                        color="inherit"
+                        href={backPath}
+                    >
+                        Sessions
+                    </Link>
+                    <Typography sx={{color: 'text.primary'}}>
+                        Session
+                    </Typography>
+                </Breadcrumbs>
 
-            <ReportSummary/>
-            <div>
-                Summary
-            </div>
-            <ul>
-                {Object.entries(session.summary.counts).map(([color, count]) => (
-                    <li key={color}>{count} {color}</li>
-                ))}
-            </ul>
+                <Typography variant='h4'>
+                    Overview
+                </Typography>
 
-            <Box sx={{ mb: 2 }}>
-                <AscentBlockChart ascents={session.ascents}>
-                    <AscentBlock color='grey' href={session.newAscentPath} color='grey' title='Create new'>
-                        +
-                    </AscentBlock>
-                </AscentBlockChart>
-            </Box>
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <ReportSummary
+                        ascentCounts={session.summary.ascentCounts}
+                    />
+                </Box>
 
-            <ShareButton onShare={() => colorsAsEmojis(session.ascents.map(ascent => ascent.color))}/>
+
+                <Typography variant='h5'>
+                    {session.title}
+                </Typography>
+
+                <Card>
+                    <CardContent sx={{textAlign: 'center'}}>
+                        <AscentBlockChart ascents={session.ascents}/>
+                    </CardContent>
+                </Card>
+
+                <Stack direction="row" spacing={2}>
+                    <Button
+                        variant='contained'
+                        href={session.newAscentPath}
+                    >
+                        New Ascent
+                    </Button>
+                    <ShareButton onShare={() => colorsAsEmojis(session.ascents.map(ascent => ascent.color))}/>
+                </Stack>
+            </Stack>
         </Layout>
     )
 }
