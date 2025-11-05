@@ -6,7 +6,7 @@ import {
     Typography
 } from '@mui/material';
 import {Layout} from "@javascript/components";
-import SessionForm from './SessionForm'
+import SessionModalForm from './SessionModalForm'
 import SessionsSummary from './SessionsSummary'
 import {useAppSelector} from "@javascript/store";
 import SessionCard from "@javascript/components/SessionCard";
@@ -22,7 +22,7 @@ export default function SessionsIndex() {
                 <Typography variant='h4'>
                     Overview
                 </Typography>
-                <SessionForm
+                <SessionModalForm
                     sessionForm={createSessionModal.newSessionForm}
                     showModal={createSessionModal.showModal}
                     validationErrors={validationErrors}

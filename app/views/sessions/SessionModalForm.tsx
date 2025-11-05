@@ -6,7 +6,7 @@ import {FieldBase, TextField, Form, SubmitButton} from "@javascript/components";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
-export default function SessionForm({sessionForm, validationErrors, showModal, onClose}) {
+export default function SessionModalForm({sessionForm, validationErrors, showModal, onClose}) {
     const {form, extras, inputs} = sessionForm
 
     if (!showModal) {

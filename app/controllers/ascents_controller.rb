@@ -2,30 +2,36 @@ class AscentsController < ApplicationController
   before_action :set_session!, only: [:new, :edit, :update, :create]
 
   def new
-    @ascent = @session.ascents.new color: @session.ascents.last&.color || Ascent.colors.values[0]
+    @ascent = Ascent.new session: @session, color: @session.ascents.last&.color || Ascent.colors.values[0]
+    @show_ascent_modal = true
+    render :'sessions/show'
   end
 
   def edit
     @ascent = @session.ascents.find(params[:id])
+    @show_ascent_modal = true
+    render :'sessions/show'
   end
 
   def create
     @ascent = @session.ascents.new ascent_params
+    @show_ascent_modal = true
     if @ascent.save
-      redirect_to session_path(@session), notice: 'Ascent added successfully!'
+      redirect_to session_path(@session), notice: "#{@ascent.color} ascent added successfully!"
     else
       flash.now[:postFormErrors] = @ascent.errors.as_json
-      render :new, alert: 'Failed to add ascent'
+      render :'sessions/show', alert: 'Failed to add ascent'
     end
   end
 
   def update
     @ascent = @session.ascents.find(params[:id])
+    @show_ascent_modal = true
     if @ascent.update ascent_params
       redirect_to session_path(@session), notice: 'Ascent Updated successfully!'
     else
       flash.now[:postFormErrors] = @ascent.errors.as_json
-      render :edit, alert: 'Failed to edit ascent'
+      render :'sessions/show', alert: 'Failed to edit ascent'
     end
   end
 

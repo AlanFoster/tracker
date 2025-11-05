@@ -1,4 +1,4 @@
-json.sessions(partial: ["sessions_list", fragment: "sessions_list"]) do
+json.sessions(partial: ["sessions/sessions_list", fragment: "sessions_list"]) do
 end
 
 json.sessionSummary do

@@ -1,11 +1,25 @@
 json.session(
   partial: [
-    'session',
+    'sessions/session',
     fragment: 'session',
     locals: {
       session: @session
     }
   ]) do
+end
+
+json.ascentModal do
+  json.showModal @show_ascent_modal
+  if @show_ascent_modal
+    json.ascentForm do
+      json.title @ascent.new_record? ? 'New Ascent' : 'Edit Ascent'
+      form_props(model: @ascent, url: @ascent.new_record? ? session_ascents_path(@session) : session_ascent_path(@session, @ascent)) do |f|
+        f.select :color, Ascent.colors.keys
+        f.text_field :tries
+        f.submit @ascent.new_record? ? 'Create' : 'Update'
+      end
+    end
+  end
 end
 
 json.backPath root_path

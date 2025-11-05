@@ -24,7 +24,7 @@ json.ascents do
     json.color ascent.color
     json.tries ascent.tries
     json.createdAt ascent.created_at
-    json.editPath edit_session_ascent_path(session, ascent)
+    json.editPath ascent.id ? edit_session_ascent_path(session, ascent) : nil
   end
 end
 

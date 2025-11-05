@@ -1,17 +1,28 @@
-import React from 'react'
-import {useContent} from '@thoughtbot/superglue'
+import React, {useContext} from 'react'
+import {NavigationContext, useContent} from '@thoughtbot/superglue'
 import ShareButton from '@javascript/components/ShareButton'
 import {colorsAsEmojis} from "@javascript/components/Emoji";
 import {AscentBlockChart} from "@javascript/components/AscentBlocks";
 import ReportSummary from "./AscentsSummary";
 import {Layout} from "@javascript/components";
-import {Box, Breadcrumbs, Button, Card, CardContent, CardHeader, Link, Stack, Typography} from '@mui/material';
+import {Box, Breadcrumbs, Button, Card, CardContent, Link, Stack, Typography} from '@mui/material';
+import {useAppSelector} from "@javascript/store";
+import AscentFormModal from './AscentModal'
 
 export default function SessionsShow() {
-    const {session, backPath} = useContent() as any
+    const {session, ascentModal, backPath} = useContent() as any
+    const validationErrors = useAppSelector((state) => state.flash.postFormErrors)
+    const {visit} = useContext(NavigationContext)
 
     return (
         <Layout>
+            <AscentFormModal
+                ascentForm={ascentModal.ascentForm}
+                showModal={ascentModal.showModal}
+                validationErrors={validationErrors}
+                onClose={() => visit(session.detailPath)}
+            />
+
             <Stack spacing={2}>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link
@@ -39,7 +50,6 @@ export default function SessionsShow() {
                         ascentCounts={session.summary.ascentCounts}
                     />
                 </Box>
-
 
                 <Typography variant='h5'>
                     {session.title}
