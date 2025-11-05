@@ -1,18 +1,19 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { useDispatch, useSelector, useStore } from "react-redux";
-import { flashSlice } from "./slices/flash";
+import { configureStore } from '@reduxjs/toolkit';
 import {
-  beforeVisit,
   beforeFetch,
   beforeRemote,
+  beforeVisit,
   rootReducer,
-} from "@thoughtbot/superglue";
+} from '@thoughtbot/superglue';
+import { useDispatch, useSelector, useStore } from 'react-redux';
+import { flashSlice } from './slices/flash';
 
 const { pages, superglue, fragments } = rootReducer;
 
 export const store = configureStore({
-  devTools: process.env.NODE_ENV !== "production",
-  middleware: (getDefaultMiddleware) =>
+  // eslint-disable-next-line node/prefer-global/process
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [beforeFetch.type, beforeVisit.type, beforeRemote.type],

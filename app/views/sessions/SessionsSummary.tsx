@@ -1,73 +1,70 @@
-import React from 'react';
-import {
-    Card,
-    CardContent,
-    Typography,
-    Grid,
-    Box,
-    Divider,
-} from '@mui/material';
-import RocketLaunch from '@mui/icons-material/RocketLaunch';
 import TransferWithinAStation from '@mui/icons-material/DirectionsWalk';
+import RocketLaunch from '@mui/icons-material/RocketLaunch';
 import Scale from '@mui/icons-material/Scale';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import React from 'react';
 
-type SessionsSummary = {
-    totalSessions: number
-    totalAscents: number
-    averageAscents: number
-};
+interface SessionsSummaryProps {
+  totalSessions: number;
+  totalAscents: number;
+  averageAscents: number;
+}
 
-export default function SessionsSummary({totalSessions, totalAscents, averageAscents}: SessionsSummary) {
-    const summary = [
-        {
-            title: 'Total Sessions',
-            value: totalSessions,
-            icon: <TransferWithinAStation color="success" fontSize="large"/>,
-        },
-        {
-            title: 'Total Ascents',
-            value: totalAscents,
-            icon: <RocketLaunch color="primary" fontSize="large"/>,
-        },
-        {
-            title: 'Average Ascents',
-            value: averageAscents,
-            icon: <Scale color="primary" fontSize="large"/>,
-        },
-    ];
+export default function SessionsSummary({
+  totalSessions,
+  totalAscents,
+  averageAscents,
+}: SessionsSummaryProps) {
+  const summary = [
+    {
+      title: 'Total Sessions',
+      value: totalSessions,
+      icon: <TransferWithinAStation color="success" fontSize="large" />,
+    },
+    {
+      title: 'Total Ascents',
+      value: totalAscents,
+      icon: <RocketLaunch color="primary" fontSize="large" />,
+    },
+    {
+      title: 'Average Ascents',
+      value: averageAscents,
+      icon: <Scale color="primary" fontSize="large" />,
+    },
+  ];
 
-    return (
-        <Box sx={{mt: 3}}>
-            <Grid container spacing={3}>
-                {summary.map((item) => (
-                    <Grid item xs={12} sm={6} md={3} key={item.title}>
-                        <Card
-                            sx={{
-                                p: 2,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                                borderRadius: 3,
-                                boxShadow: 3,
-                            }}
-                        >
-                            <CardContent sx={{flex: 1}}>
-                                <Typography
-                                    variant="subtitle2"
-                                    color="text.secondary"
-                                    gutterBottom
-                                >
-                                    {item.title}
-                                </Typography>
-                                <Typography variant="h5" fontWeight="bold">
-                                    {item.value}
-                                </Typography>
-                            </CardContent>
-                            <Box sx={{ml: 2}}>{item.icon}</Box>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-    );
+  return (
+    <Box sx={{ mt: 3 }}>
+      <Grid container spacing={3}>
+        {summary.map(item => (
+          <Grid item xs={12} sm={6} md={3} key={item.title}>
+            <Card
+              sx={{
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderRadius: 3,
+                boxShadow: 3,
+              }}
+            >
+              <CardContent sx={{ flex: 1 }}>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  {item.title}
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {item.value}
+                </Typography>
+              </CardContent>
+              <Box sx={{ ml: 2 }}>{item.icon}</Box>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
+  );
 }

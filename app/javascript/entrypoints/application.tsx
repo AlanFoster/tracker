@@ -1,9 +1,10 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { Application, SaveResponse } from "@thoughtbot/superglue";
-import { buildVisitAndRemote } from "@javascript/application_visit";
-import { pageIdentifierToPageComponent } from "@javascript/page_to_page_mapping";
-import { store } from "@javascript/store";
+import type { SaveResponse } from '@thoughtbot/superglue';
+import { buildVisitAndRemote } from '@javascript/application_visit';
+import { pageIdentifierToPageComponent } from '@javascript/page_to_page_mapping';
+import { store } from '@javascript/store';
+import { Application } from '@thoughtbot/superglue';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
 declare global {
   interface Window {
@@ -11,9 +12,9 @@ declare global {
   }
 }
 
-if (typeof window !== "undefined" && window.SUPERGLUE_INITIAL_PAGE_STATE) {
-  document.addEventListener("DOMContentLoaded", function () {
-    const appEl = document.getElementById("app");
+if (typeof window !== 'undefined' && window.SUPERGLUE_INITIAL_PAGE_STATE) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const appEl = document.getElementById('app');
     const location = window.location;
 
     if (appEl) {
@@ -34,7 +35,7 @@ if (typeof window !== "undefined" && window.SUPERGLUE_INITIAL_PAGE_STATE) {
           store={store}
           // Mapping between the page identifier to page component
           mapping={pageIdentifierToPageComponent}
-        />
+        />,
       );
     }
   });

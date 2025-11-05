@@ -1,27 +1,24 @@
 {
   "compilerOptions": {
-    "removeComments": true,
-    "isolatedModules": true,
-    "moduleResolution": "bundler",
-    "strict": true,
-    "strictPropertyInitialization": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "jsx": "react",
-    "allowJs": false,
     "target": "ES2021",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "noEmit": true,
+    "jsx": "react",
     "baseUrl": ".", // Usually the root of your project
+    "moduleResolution": "bundler",
     "paths": {
       "@javascript/*": ["app/javascript/*"],
       "@views/*": ["app/views/*"]
     },
-    "types": ["node"]
+    "types": ["node"],
+    "allowJs": false,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true
   },
-  "include": [
-    "app/javascript/**/*",
-    "app/views/**/*"
-  ],
+  "include": ["app/javascript/**/*", "app/views/**/*"]
 }

@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { receiveResponse, beforeVisit } from "@thoughtbot/superglue";
+import { createSlice } from '@reduxjs/toolkit';
+import { beforeVisit, receiveResponse } from '@thoughtbot/superglue';
 
 type FlashState = Record<string, any>;
 
 const initialState: FlashState = {};
 
 export const flashSlice = createSlice({
-  name: "flash",
-  initialState: initialState,
+  name: 'flash',
+  initialState,
   reducers: {
-    clearFlash(state, { payload }: { payload: string }) {
+    clearFlash(state, { payload }: { payload: string; }) {
       const key = payload;
       if (!key) {
         return {};
@@ -40,7 +40,8 @@ export const flashSlice = createSlice({
           ...state,
           ...(response.slices.flash as FlashState),
         };
-      } else {
+      }
+      else {
         return state;
       }
     });

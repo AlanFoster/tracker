@@ -1,11 +1,11 @@
-import {
+import type {
   ApplicationRemote,
   ApplicationVisit,
-  SuperglueStore,
   BuildVisitAndRemote,
-} from "@thoughtbot/superglue";
+  SuperglueStore,
+} from '@thoughtbot/superglue';
+import { remote, visit } from '@thoughtbot/superglue/action_creators';
 import { requestStripe } from 'request-stripe';
-import { visit, remote } from "@thoughtbot/superglue/action_creators";
 
 /**
  * This function returns a wrapped visit and remote that will be used by UJS,
@@ -17,7 +17,7 @@ import { visit, remote } from "@thoughtbot/superglue/action_creators";
  */
 export const buildVisitAndRemote: BuildVisitAndRemote = (
   ref,
-  store: SuperglueStore
+  store: SuperglueStore,
 ) => {
   const appRemote: ApplicationRemote = (path, { dataset, ...options } = {}) => {
     /**
@@ -33,9 +33,8 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
      *
      * This would be available as `sgHideProgress` on the dataset
      */
-    const done = requestStripe()
-    return store.dispatch(remote(path, options))
-        .finally(() => done());
+    const done = requestStripe();
+    return store.dispatch(remote(path, options)).finally(() => done());
   };
 
   const appVisit: ApplicationVisit = (path, { dataset, ...options } = {}) => {
@@ -46,7 +45,7 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
      * Hint: you can access the current pageKey
      * via `store.getState().superglue.currentPageKey`
      */
-    const done = requestStripe()
+    const done = requestStripe();
     return store
       .dispatch(visit(path, options))
       .then((meta) => {
@@ -65,8 +64,8 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
          * This option overrides the `navigationAction` to allow a link click or
          * a form submission to replace history instead of the usual push.
          */
-        const navigatonAction = !!dataset?.sgReplace
-          ? "replace"
+        const navigatonAction = dataset?.sgReplace
+          ? 'replace'
           : meta.navigationAction;
         ref.current?.navigateTo(meta.pageKey, {
           action: navigatonAction,
@@ -85,7 +84,7 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
          *
          * This is where you hide a progress bar.
          */
-        done()
+        done();
       })
       .catch((err) => {
         const response = err.response;
@@ -109,15 +108,15 @@ export const buildVisitAndRemote: BuildVisitAndRemote = (
            * go to that locaton directly.
            */
           window.location = response.url;
-        } else {
+        }
+        else {
           if (response.status >= 400 && response.status < 500) {
-            window.location.href = "/400.html";
+            window.location.href = '/400.html';
             return;
           }
 
           if (response.status >= 500) {
-            window.location.href = "/500.html";
-            return;
+            window.location.href = '/500.html';
           }
         }
       });

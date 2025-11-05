@@ -1,65 +1,73 @@
-import {Button, Typography} from "@mui/material";
-import React from "react";
-import {ascentColors} from "@javascript/components/ascentColors";
+import { ascentColors } from '@javascript/components/ascentColors';
+import { Button, Typography } from '@mui/material';
+import React from 'react';
 
-type BlockProps = {
-    href: string
-    color: keyof typeof ascentColors
-    title: string
-    children: React.ReactNode
-    renderLink: boolean
+interface BlockProps {
+  href: string;
+  color: keyof typeof ascentColors;
+  title: string;
+  children: React.ReactNode;
+  renderLink: boolean;
 }
 
-export const AscentBlock = ({href, color, title, children, renderLink = true}: BlockProps) => {
-    const button = <Button
-        title={title}
-        variant='contained'
-        disabled={!renderLink}
-        style={{
-            backgroundColor: ascentColors[color] || 'red',
-            display: 'inline-block',
-            textAlign: 'center',
-            color: (color === 'white' || color === 'yellow') ? 'black' : 'white'
-        }}>
-        {children}
+export function AscentBlock({ href, color, title, children, renderLink = true }: BlockProps) {
+  const button = (
+    <Button
+      title={title}
+      variant="contained"
+      disabled={!renderLink}
+      style={{
+        backgroundColor: ascentColors[color] || 'red',
+        display: 'inline-block',
+        textAlign: 'center',
+        color: (color === 'white' || color === 'yellow') ? 'black' : 'white',
+      }}
+    >
+      {children}
     </Button>
+  );
 
-    return (
-        renderLink ? <a href={href}>
+  return (
+    renderLink
+      ? (
+          <a href={href}>
             {button}
-        </a> : button
-    );
+          </a>
+        )
+      : button
+  );
 }
 
-export const AscentBlockChart = ({ascents, href = undefined, children = undefined, renderLink = true}) => {
-    if (ascents.length === 0) {
-        return (
-            <Typography mt={10} mb={10}>
-                No ascents registered yet.
-            </Typography>
-        )
-    }
-
+export function AscentBlockChart({ ascents, href = undefined, children = undefined, renderLink = true }) {
+  if (ascents.length === 0) {
     return (
-        <span
-            style={{
-                display: 'inline-grid',
-                gridTemplateColumns: 'repeat(10, max-content)',
-                gap: '10px',
-            }}
+      <Typography mt={10} mb={10}>
+        No ascents registered yet.
+      </Typography>
+    );
+  }
+
+  return (
+    <span
+      style={{
+        display: 'inline-grid',
+        gridTemplateColumns: 'repeat(10, max-content)',
+        gap: '10px',
+      }}
+    >
+      {children}
+      {ascents.map((ascent, index) => (
+        <AscentBlock
+          key={ascent.id}
+          color={ascent.color}
+          href={href || ascent.editPath}
+          title={`${ascent.tries === 0 ? 'flash' : ascent.tries} ${ascent.createdAt}`}
+          renderLink={renderLink}
         >
-            {children}
-            {ascents.map((ascent, index) =>
-                <AscentBlock
-                    key={ascent.id}
-                    color={ascent.color}
-                    href={href || ascent.editPath}
-                    title={`${ascent.tries === 0 ? 'flash' : ascent.tries} ${ascent.createdAt}`}
-                    renderLink={renderLink}
-                >
-                    {index + 1}
-                </AscentBlock>
-            )}
-        </span>
-    )
+          {index + 1}
+        </AscentBlock>
+      ),
+      )}
+    </span>
+  );
 }
