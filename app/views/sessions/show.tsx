@@ -36,7 +36,7 @@ export default function SessionsShow() {
 
       <Stack spacing={2}>
         <Breadcrumbs aria-label="breadcrumb">
-          <Link underline="hover" color="inherit" href={backPath}>
+          <Link underline="hover" color="inherit" href={backPath} data-sg-visit>
             Sessions
           </Link>
           <Typography sx={{ color: 'text.primary' }}>Session</Typography>
@@ -57,7 +57,7 @@ export default function SessionsShow() {
         </Card>
 
         <Stack direction="row" spacing={2}>
-          <Button variant="contained" href={session.newAscentPath}>
+          <Button variant="contained" href={session.newAscentPath} data-sg-visit>
             New Ascent
           </Button>
           <ShareButton

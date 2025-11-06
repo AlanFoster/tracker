@@ -562,10 +562,11 @@ export type SubmitButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 export function SubmitButton({
   type: _type,
   text,
+  loading,
   ...rest
 }: SubmitButtonProps) {
   return (
-    <MuiButton {...rest} variant="outlined" type="submit">
+    <MuiButton {...rest} variant="outlined" type="submit" loading={loading}>
       {text}
     </MuiButton>
   );

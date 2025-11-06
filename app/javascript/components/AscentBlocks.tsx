@@ -30,7 +30,7 @@ export function AscentBlock({ href, color, title, children, renderLink = true }:
   return (
     renderLink
       ? (
-          <a href={href}>
+          <a href={href} data-sg-visit>
             {button}
           </a>
         )
