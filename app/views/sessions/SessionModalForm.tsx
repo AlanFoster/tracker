@@ -1,5 +1,5 @@
 import { Form, SubmitButton, TextField } from '@javascript/components';
-import useFormSubmitState from '@javascript/components/useFormSubmitState';
+import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import { Dialog, DialogContent, DialogTitle, Stack } from '@mui/material';
 import React from 'react';
 
@@ -10,7 +10,7 @@ export default function SessionModalForm({
   onClose,
 }) {
   const { form, extras, inputs } = sessionForm;
-  const [isLoading, handleSubmit] = useFormSubmitState();
+  const [isLoading, handleSubmit] = useVisitFormSubmit();
 
   if (!showModal) {
     return undefined;
@@ -30,7 +30,6 @@ export default function SessionModalForm({
               {...handleSubmit}
               extras={extras}
               validationErrors={validationErrors}
-              data-sg-visit
             >
               <Stack spacing={2} paddingTop={1} width={400}>
                 <TextField

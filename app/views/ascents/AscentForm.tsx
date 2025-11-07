@@ -1,6 +1,6 @@
 import { FieldBase, Form, SubmitButton } from '@javascript/components';
 import { ascentTheme } from '@javascript/components/ascentColors';
-import useFormSubmitState from '@javascript/components/useFormSubmitState';
+import useVisitFormSubmit from '@javascript/components/UseVisitFormSubmit';
 import { Check } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -46,7 +46,7 @@ function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
 
 export default function AscentForm({ ascentForm, validationErrors }) {
   const { form, extras, inputs } = ascentForm;
-  const [isLoading, handleSubmit] = useFormSubmitState();
+  const [isLoading, handleSubmit] = useVisitFormSubmit();
   const [tries, setTries] = useState(Number(inputs.tries.defaultValue) || 0);
   const [color, setColor] = useState(inputs.color.defaultValue);
 
@@ -55,7 +55,7 @@ export default function AscentForm({ ascentForm, validationErrors }) {
       {/* <pre>{JSON.stringify(ascentForm, null, 4)}</pre> */}
       {/* <pre>{JSON.stringify(validationErrors, null, 4)}</pre> */}
 
-      <Form {...form} extras={extras} validationErrors={validationErrors} {...handleSubmit} data-sg-remote>
+      <Form {...form} extras={extras} validationErrors={validationErrors} {...handleSubmit}>
         <div>
           <input
             type="hidden"
