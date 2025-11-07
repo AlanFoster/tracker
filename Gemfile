@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "vite_rails"
-gem "superglue", "2.0.0.alpha.8"
+gem "superglue", "2.0.0.alpha.9"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
