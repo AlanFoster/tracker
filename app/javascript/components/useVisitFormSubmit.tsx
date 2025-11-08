@@ -7,12 +7,13 @@ export default function useVisitFormSubmit() {
   if (useSuperglueAttributes) {
     const isLoading = false;
     const formProps = {
-      'data-sg-visit': true
-    }
-    return [isLoading, formProps] as const
-  } else {
+      'data-sg-visit': true,
+    };
+    return [isLoading, formProps] as const;
+  }
+  else {
     const [isLoading, setIsLoading] = useState(false);
-    const { remote, visit, pageKey } = useContext(NavigationContext);
+    const { visit, pageKey } = useContext(NavigationContext);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();

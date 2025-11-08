@@ -55,9 +55,9 @@ ascents_data = [
 ]
 
 epoch = Time.zone.parse("2025-01-01 00:00:00")
-sessions = 15.times.map do |x|
+sessions = 50.times.map do |x|
   {
-    description: 'session',
+    description: "session #{x}",
     ascents: as_ascents(
       ascents_data[x % ascents_data.length],
       epoch + x.days
@@ -67,8 +67,9 @@ sessions = 15.times.map do |x|
 end
 
 sessions.each do |session|
-  session_record = Session.find_or_create_by!(created_at: session[:created_at])
-  session_record.update!(session.without(:created_at, :ascents))
+  session_record = Session.find_or_initialize_by(created_at: session[:created_at])
+  session_record.update(session.without(:created_at, :ascents))
+  session_record.save!
   session[:ascents].each do |ascent|
     session_record.ascents
                   .find_or_create_by!(tries: 0, created_at: ascent[:created_at])

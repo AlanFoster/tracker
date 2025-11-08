@@ -1,4 +1,17 @@
-json.sessions(partial: ["sessions/sessions_list", fragment: "sessions_list"]) do
+json.sessions do
+  json.meta do
+    json.currentPage @sessions.current_page
+    json.perPage @sessions.limit_value
+    json.totalItems @sessions.total_count
+    json.totalPages @sessions.total_pages
+  end
+  json.links do
+    json.self sessions_path(page: @sessions.current_page, per_page: @sessions.max_per_page)
+    json.next path_to_next_page(@sessions)
+    json.previous path_to_prev_page(@sessions)
+  end
+  json.data(partial: ["sessions/sessions_list", fragment: "sessions_list"]) do
+  end
 end
 
 json.sessionSummary do
@@ -10,17 +23,19 @@ json.sessionSummary do
   json.averageAscents session_count == 0 ? 0 : (ascent_count / session_count).round(2)
 end
 
+pagination_params = { page: params[:page], per_page: params[:per_page] }.compact.transform_values(&:to_i)
 json.createSessionModal do
-  json.newSessionForm do
-    if @session
-      # , props_at: 'data.createSessionModal.newSessionForm'
-      form_props(model: @session, url: sessions_path(@session)) do |f|
-        f.text_field :description
-        f.submit "Add"
-      end
+  if @show_modal
+    json.newSessionForm do
+        # TODO: Can't use "props_at: 'data.createSessionModal.newSessionForm'" as it breaks in the redirect scenario
+        form_props(model: @session, url: sessions_path(@session, **pagination_params)) do |f|
+          f.text_field :description
+          f.submit "Add"
+        end
     end
+    json.backPath sessions_path(**pagination_params)
   end
   json.showModal @show_modal
 end
 
-json.newSessionPath new_session_path(props_at: 'data.createSessionModal')
+json.newSessionPath new_session_path(**pagination_params, props_at: 'data.createSessionModal')

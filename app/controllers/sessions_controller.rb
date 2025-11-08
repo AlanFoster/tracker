@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def index
-    @sessions = Session.order(id: :desc).first(5)
+    @sessions = paginated_sessions
     @show_modal = false
   end
 
@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
   end
 
   def new
-    @sessions = Session.order(id: :desc).first(5)
+    @sessions = paginated_sessions
     @session = Session.new
     @show_modal = true
     render :index
@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
 
   def create
     @session = Session.new session_params
-    @sessions = Session.order(id: :desc).first(5)
+    @sessions = paginated_sessions
     @show_modal = true
     if @session.save
       redirect_to session_path(@session), notice: 'Session added successfully!'
@@ -29,7 +29,7 @@ class SessionsController < ApplicationController
 
   def update
     @session = Session.find(params[:id])
-    @sessions = Session.order(id: :desc).first(5)
+    @sessions = paginated_sessions
     if @session.update session_params
       redirect_to session_path(@session), notice: 'Session updated successfully!'
     else
@@ -45,6 +45,15 @@ class SessionsController < ApplicationController
   end
 
   private
+
+  private
+
+  def paginated_sessions
+    Session.order(id: :desc)
+           .page(params[:page])
+           .per([params.fetch(:per_page, 10).to_i, 100].min)
+           .order(created_at: :desc)
+  end
 
   def session_params
     params.require(:session).permit(:description)

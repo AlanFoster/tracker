@@ -883,10 +883,10 @@
   resolved "https://registry.yarnpkg.com/@thoughtbot/candy_wrapper/-/candy_wrapper-0.0.4.tgz#3cf2fd96661bd435dcba43c078dcd9da3f1db952"
   integrity sha512-zdCUcccG5rQIzj16lrdAPjurvWKCOkQ50Fy29vyDP6lBXQBHYObtoGuP79kZ9hgSIxu/dJnDPOe2JiUaG7LW4A==
 
-"@thoughtbot/superglue@2.0.0-alpha.8":
-  version "2.0.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/@thoughtbot/superglue/-/superglue-2.0.0-alpha.8.tgz#e1c4fe568e5d9a282c7111cc8edc4c214827b70c"
-  integrity sha512-CHALS57/XeKP+F4UExl2//R/cHVYsYUpckU0VlDc8MrrvXfLK6KIw0WV9Lv6hT6XwZPS3rz4lq32lfAY8XNjuQ==
+"@thoughtbot/superglue@2.0.0-alpha.9":
+  version "2.0.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/@thoughtbot/superglue/-/superglue-2.0.0-alpha.9.tgz#397e15b8c0bec0690e9dfe071ad0e9fd6dc09f78"
+  integrity sha512-KS+IrZ88H2wEUP4Qtxt40E0uWNbJ1pFDvR+spOUO3E9zALvT3MZuHYh/woReAJwZzS+QuFYWzsWfKB1ZyV04VQ==
   dependencies:
     "@rails/actioncable" "^8.0.200"
     "@types/lodash.debounce" "^4.0.9"
