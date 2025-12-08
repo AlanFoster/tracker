@@ -35,7 +35,7 @@ export default function SessionsIndex() {
   ) => {
     const newPerPage = event.target.value;
     const url = new URL(sessions.links.self, window.location.origin);
-    url.searchParams.set('page', 0);
+    url.searchParams.set('page', '0');
     url.searchParams.set('per_page', newPerPage);
     visit(
       `${url.pathname}?${url.searchParams.toString()}`,

@@ -14,6 +14,8 @@ import {
 import React, { useRef, useState } from 'react';
 
 export default function SessionCard({ session }) {
+  const { form, extras } = session.deleteForm;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const formRef = useRef(null);
 
@@ -34,7 +36,6 @@ export default function SessionCard({ session }) {
     formRef.current?.submit();
     e.stopPropagation();
   };
-  const { form, extras } = session.deleteForm;
 
   return (
     <Card key={session.id} sx={{ mb: 4 }}>

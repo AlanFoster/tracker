@@ -6,9 +6,9 @@ json.sessions do
     json.totalPages @sessions.total_pages
   end
   json.links do
-    json.self sessions_path(page: @sessions.current_page, per_page: @sessions.max_per_page)
-    json.next path_to_next_page(@sessions)
-    json.previous path_to_prev_page(@sessions)
+    json.self Kaminari::Helpers::Tag.new(self, params: { page: @sessions.current_page, format: nil }).page_url_for @sessions.current_page
+    json.next path_to_next_page(@sessions, format: nil)
+    json.previous path_to_prev_page(@sessions, format: nil)
   end
   json.data(partial: ["sessions/sessions_list", fragment: "sessions_list"]) do
   end
