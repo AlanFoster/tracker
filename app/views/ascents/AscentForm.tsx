@@ -1,4 +1,4 @@
-import { FieldBase, Form, SubmitButton } from '@javascript/components';
+import { FieldBase, Form, SubmitButton } from '@javascript/components/Inputs';
 import { ascentTheme } from '@javascript/components/ascentColors';
 import useVisitFormSubmit from '@javascript/components/UseVisitFormSubmit';
 import { Check } from '@mui/icons-material';

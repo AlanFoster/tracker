@@ -1,4 +1,4 @@
-import { useAppSelector } from '@javascript/store';
+import { useAppSelector } from '@javascript/applications/main/store';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useContent } from '@thoughtbot/superglue';
 import React from 'react';

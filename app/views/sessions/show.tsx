@@ -1,8 +1,8 @@
-import { Layout } from '@javascript/components';
+import { Layout } from '@javascript/components/Layout';
 import { AscentBlockChart } from '@javascript/components/AscentBlocks';
 import { colorsAsEmojis } from '@javascript/components/Emoji';
 import ShareButton from '@javascript/components/ShareButton';
-import { useAppSelector } from '@javascript/store';
+import { useAppSelector } from '@javascript/applications/main/store';
 import {
   Box,
   Breadcrumbs,

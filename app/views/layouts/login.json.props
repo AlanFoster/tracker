@@ -1,20 +1,6 @@
 path = request.format.json? ? param_to_dig_path(params[:props_at]) : nil
 
 json.data(dig: path) do
-
-  if Current.user
-    json.currentUser do
-      json.id Current.user.id
-      json.email_address Current.user.email_address
-
-      json.signoutForm do
-        form_props(url: user_session_path, method: :delete) do |f|
-          f.submit 'Sign out'
-        end
-      end
-    end
-  end
-
   yield json
 end
 

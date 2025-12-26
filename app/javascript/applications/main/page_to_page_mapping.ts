@@ -1,8 +1,8 @@
 const pageIdentifierToPageComponent = {};
-const pages = import.meta.glob('../views/**/*.{tsx,jsx}', { eager: true });
+const pages = import.meta.glob('../../../views/**/*.{tsx,jsx}', { eager: true });
 
 for (const [key, value] of Object.entries(pages)) {
-  const identifier = key.replace('../views/', '').split('.')[0];
+  const identifier = key.replace('../../../views/', '').split('.')[0];
   if (!(value && value.default)) {
     throw new Error(`View ${identifier} did not export default component`);
   }

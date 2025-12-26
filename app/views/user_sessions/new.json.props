@@ -1,0 +1,9 @@
+json.userSessionForm do
+  form_props(url: user_session_path) do |f|
+    f.email_field :email_address
+    f.password_field :password
+    f.submit "Sign in"
+  end
+end
+
+json.forgotPasswordPath new_password_path

@@ -1,6 +1,6 @@
-import { Layout } from '@javascript/components';
+import { Layout } from '@javascript/components/Layout';
 import SessionCard from '@javascript/components/SessionCard';
-import { useAppSelector } from '@javascript/store';
+import { useAppSelector } from '@javascript/applications/main/store';
 import { Box, Link, TablePagination, Typography } from '@mui/material';
 import { NavigationContext, useContent } from '@thoughtbot/superglue';
 import React, { useContext } from 'react';

@@ -1,7 +1,7 @@
 import type { SaveResponse } from '@thoughtbot/superglue';
-import { buildVisitAndRemote } from '@javascript/applications/main/application_visit';
-import { pageIdentifierToPageComponent } from '@javascript/applications/main/page_to_page_mapping';
-import { store } from '@javascript/applications/main/store';
+import { buildVisitAndRemote } from '@javascript/applications/login/application_visit';
+import { pageIdentifierToPageComponent } from '@javascript/applications/login/page_to_page_mapping';
+import { store } from '@javascript/applications/login/store';
 import { Application } from '@thoughtbot/superglue';
 import React from 'react';
 import { createRoot } from 'react-dom/client';

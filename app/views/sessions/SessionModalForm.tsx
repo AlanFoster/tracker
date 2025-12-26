@@ -1,4 +1,4 @@
-import { Form, SubmitButton, TextField } from '@javascript/components';
+import { Form, SubmitButton, TextField } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import { Dialog, DialogContent, DialogTitle, Stack } from '@mui/material';
 import React from 'react';

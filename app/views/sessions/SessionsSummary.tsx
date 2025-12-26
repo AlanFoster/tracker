@@ -27,7 +27,7 @@ export default function SessionsSummary({
       icon: <RocketLaunch color="primary" fontSize="large" />,
     },
     {
-      title: 'Average Ascents',
+      title: 'Average Session Ascents',
       value: averageAscents,
       icon: <Scale color="primary" fontSize="large" />,
     },

@@ -138,12 +138,13 @@ export function FieldBase({
   label,
   errorKey,
   children,
+  type = 'text',
   ...props
 }: FieldBaseProps) {
   return (
     <>
       <label htmlFor={props.id}>{label}</label>
-      {children || <MuiTextField slotProps={{ htmlInput: props }} />}
+      {children || <MuiTextField type={type} slotProps={{ htmlInput: props }} />}
       <FieldError errorKey={errorKey} />
     </>
   );
@@ -284,6 +285,7 @@ export function TextField({
 
   return (
     <MuiTextField
+      variant="outlined"
       label={label}
       error={!!errorMessage}
       // slotProps={{ htmlInput: rest}}
@@ -458,8 +460,22 @@ export type PasswordFieldProps = React.InputHTMLAttributes<HTMLInputElement>
  * Designed to work with a payload form_props's [password_field helper](https://github.com/thoughtbot/form_props?tab=readme-ov-file#text-helpers).
  * Mimics the rails equivalent. Please modify to your liking.
  */
-export function PasswordField({ type: _type, ...rest }: PasswordFieldProps) {
-  return <FieldBase {...rest} type="password" />;
+export function PasswordField({
+                                label,
+                                errorKey,
+                                children,
+                                type: _type,
+                                ...rest }: PasswordFieldProps) {
+  const errorMessage = useErrorMessage(errorKey);
+
+  return <MuiTextField
+    label={label}
+    error={!!errorMessage}
+    // slotProps={{ htmlInput: rest}}
+    helperText={errorMessage}
+    type='password'
+    {...rest}
+  />
 }
 
 export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>
@@ -563,10 +579,11 @@ export function SubmitButton({
   type: _type,
   text,
   loading,
+  variant = 'outlined',
   ...rest
 }: SubmitButtonProps) {
   return (
-    <MuiButton {...rest} variant="outlined" type="submit" loading={loading}>
+    <MuiButton {...rest} variant={variant} type="submit" loading={loading}>
       {text}
     </MuiButton>
   );

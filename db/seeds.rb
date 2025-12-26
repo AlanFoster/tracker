@@ -8,6 +8,18 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+if Rails.env.development?
+  _admin = User.find_or_create_by!(email_address: "admin@example.com") do |u|
+    u.password = "password"
+    u.password_confirmation = "password"
+  end
+
+  _basic_user = User.find_or_create_by!(email_address: "user@example.com") do |u|
+    u.password = "password"
+    u.password_confirmation = "password"
+  end
+end
+
 def as_ascents(colors, base_time)
   all_colors = colors.flat_map do |color, count|
     [color] * count
