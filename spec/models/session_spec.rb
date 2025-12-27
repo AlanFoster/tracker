@@ -16,13 +16,16 @@
 #
 #  user_id  (user_id => users.id)
 #
-class Session < ApplicationRecord
-  has_many :ascents, dependent: :destroy
-  belongs_to :user
+require 'rails_helper'
 
-  validates :description, length: {minimum: 5, maximum: 64}, allow_blank: false
+RSpec.describe Session, type: :model do
+  describe "associations" do
+    it { should belong_to(:user) }
+  end
 
-  def title
-    @title ||= "Session #{created_at.strftime("%Y-%m-%d")}#{description ? " - #{description}" : ''}"
+  describe 'validations' do
+    it { should validate_length_of(:description).is_at_least(5).is_at_most(64) }
+    it { should_not allow_value('').for(:description) }
+    it { should_not allow_value(nil).for(:description) }
   end
 end

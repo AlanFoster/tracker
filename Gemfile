@@ -4,7 +4,7 @@ gem "kaminari"
 gem "vite_rails"
 gem "superglue", "2.0.0.alpha.8"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.1"
+gem "rails", github: "rails/rails", ref: "92481359a7f74261059a292a7cea61e68144b57e"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
@@ -23,6 +23,11 @@ gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
 
+# oauth
+gem "omniauth"
+gem "omniauth-rails_csrf_protection"
+gem "omniauth-google-oauth2"
+
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
@@ -34,6 +39,8 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
+
+gem 'dotenv-rails', groups: [:development, :test]
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -47,9 +54,14 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # testing framework
+  gem 'rspec-rails'
+  gem "shoulda-matchers"
 end
 
 group :development do
+  gem 'pry-byebug'
   gem "annotaterb"
   gem "better_errors"
   gem "binding_of_caller"
@@ -61,4 +73,5 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "factory_bot_rails"
 end

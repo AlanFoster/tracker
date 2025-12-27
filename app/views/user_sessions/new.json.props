@@ -6,4 +6,29 @@ json.userSessionForm do
   end
 end
 
+allowed_providers = Rails.application.config.x.omniauth.allowed_providers
+oauth_providers = []
+if allowed_providers.include?(:developer)
+  oauth_providers << {
+    path: '/auth/developer',
+    name: 'developer',
+    display_name: 'Developer auth'
+  }
+end
+if allowed_providers.include?(:google_oauth2)
+  oauth_providers << {
+    path: '/auth/google_oauth2',
+    name: 'google_oauth2',
+    display_name: 'Google'
+  }
+end
+
+json.authProviders do
+  json.array! oauth_providers do |provider|
+    json.name provider[:name]
+    json.path provider[:path]
+    json.displayName provider[:display_name]
+  end
+end
+
 json.forgotPasswordPath new_password_path

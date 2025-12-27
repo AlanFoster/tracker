@@ -15,8 +15,8 @@ json.sessions do
 end
 
 json.sessionSummary do
-  session_count = Session.count
-  ascent_count = Ascent.count
+  session_count = Current.user.sessions.count
+  ascent_count = Current.user.sessions.joins(:ascents).count
 
   json.totalSessions session_count
   json.totalAscents ascent_count

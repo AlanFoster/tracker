@@ -1,0 +1,29 @@
+# == Schema Information
+#
+# Table name: connected_services
+#
+#  id         :integer          not null, primary key
+#  provider   :string
+#  uid        :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  user_id    :integer          not null
+#
+# Indexes
+#
+#  index_connected_services_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  user_id  (user_id => users.id)
+#
+FactoryBot.define do
+  factory :connected_service do
+    trait :google_oauth2 do
+      sequence(:uid) { |n| n }
+      provider { :google_oauth2 }
+
+      user
+    end
+  end
+end

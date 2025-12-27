@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {useAppSelector} from '@javascript/applications/login/store';
 import {
+  Button,
   Alert,
   ThemeProvider,
   Avatar,
@@ -15,6 +16,13 @@ import {Form, PasswordField, SubmitButton, TextField} from "@javascript/componen
 import CssBaseline from '@mui/material/CssBaseline';
 import useVisitFormSubmit from "@javascript/components/useVisitFormSubmit";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import GoogleIcon from '@mui/icons-material/Google';
+import HandymanIcon from '@mui/icons-material/Handyman';
+
+const icons = {
+  google_oauth2: <GoogleIcon />,
+  developer: <HandymanIcon />
+}
 
 const darkTheme = createTheme({
   palette: {
@@ -25,7 +33,7 @@ const darkTheme = createTheme({
 export default function UserSessionsIndex() {
   const flash = useAppSelector((state) => state.flash)
   const [isLoading, handleSubmit] = useVisitFormSubmit();
-  const {userSessionForm, forgotPasswordPath}
+  const {userSessionForm, authProviders, forgotPasswordPath}
     = useContent() as any;
   const {form, extras, inputs} = userSessionForm;
   const validationErrors = useAppSelector(
@@ -101,6 +109,34 @@ export default function UserSessionsIndex() {
                 loading={isLoading}
                 sx={{mt: 3, mb: 2}}
               />
+
+              {authProviders.map(({ name, path, displayName }) => (
+                <Button
+                  key={name}
+                  component='a'
+                  href={path}
+                  variant='outlined'
+                  role={undefined}
+                  loading={isLoading}
+                  startIcon={icons[name]}
+                  sx={{
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    borderRadius: 1,
+                    px: 2,
+                    borderColor: '#5f6368',
+                    color: '#e8eaed',
+                    backgroundColor: '#202124',
+                    '&:hover': {
+                      backgroundColor: '#303134',
+                      borderColor: '#8ab4f8'
+                    },
+                  }}
+                >
+                  Sign in with {displayName}
+                </Button>
+              ))}
+
             </Stack>
           </Form>
           {/*<a href={forgotPasswordPath}>Forgot password</a>*/}

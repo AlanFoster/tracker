@@ -10,7 +10,7 @@ import {
   styled,
   ThemeProvider,
   Toolbar,
-  Avatar,
+  Link,
   Typography,
 } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
@@ -18,6 +18,7 @@ import { Form } from '@javascript/components/Inputs';
 import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
 import {useContent} from "@thoughtbot/superglue";
+import UserAvatar from './UserAvatar';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -62,7 +63,7 @@ const darkTheme = createTheme({
 
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
-function UserProfileMenu({ currentUser }) {
+function UserProfileMenu({ currentUser, profilePath }) {
   const [isLoading, setIsLoading] = React.useState(false)
   const formRef = React.useRef(null);
   const {form, extras} = currentUser.signoutForm;
@@ -85,16 +86,17 @@ function UserProfileMenu({ currentUser }) {
 
   return (
     <div>
-    <IconButton
-      size="large"
-      aria-label="account of current user"
-      aria-controls="menu-appbar"
-      aria-haspopup="true"
-      onClick={handleMenu}
-      color="inherit"
-    >
-      <Avatar>{currentUser.email_address[0].toUpperCase()}</Avatar>
-    </IconButton>
+    <UserAvatar
+      slots={{
+        iconButton: {
+          'aria-label': "account of current user",
+          'aria-controls': "menu-appbar",
+          'aria-haspopup': "true",
+          onClick: handleMenu
+        }
+      }}
+      user={currentUser}
+    />
     <Menu
       id="menu-appbar"
       anchorEl={anchorEl}
@@ -113,6 +115,11 @@ function UserProfileMenu({ currentUser }) {
       {/* Hidden form that gets triggered for log out */}
       <Form ref={formRef} {...form} extras={extras} data-sg-remote/>
 
+      {/*data-sg-visit*/}
+      <MenuItem component='a' href={profilePath} >
+        Profile
+      </MenuItem>
+
       <MenuItem onClick={handleSignOut} disabled={isLoading}>
         Sign out
       </MenuItem>
@@ -123,7 +130,7 @@ function UserProfileMenu({ currentUser }) {
 
 export function Layout({ children }: React.PropsWithChildren) {
   const flash = useAppSelector(state => state.flash);
-  const { currentUser } = useContent();
+  const { currentUser, profilePath } = useContent();
 
   return (
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
@@ -138,15 +145,27 @@ export function Layout({ children }: React.PropsWithChildren) {
               sx={{ mr: 2, display: { sm: 'none' } }}
             >
             </IconButton>
-            <Typography
-              variant="h6"
+            <Box
               component="div"
               sx={{ flexGrow: 1, display: { sm: 'block' } }}
             >
-              Tracker
-            </Typography>
-
-            {currentUser && <UserProfileMenu currentUser={currentUser }/>}
+              <Link
+                href='/'
+                data-sg-visit
+                color="inherit"
+                underline="none"
+                sx={{
+                  '&:hover': { textDecoration: 'underline' },
+                }}
+              >
+                <Typography
+                  variant="h6"
+                >
+                  Tracker
+                </Typography>
+              </Link>
+            </Box>
+            {currentUser && <UserProfileMenu currentUser={currentUser } profilePath={profilePath} />}
           </Toolbar>
         </AppBar>
         <Offset />

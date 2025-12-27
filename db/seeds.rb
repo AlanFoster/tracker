@@ -8,16 +8,17 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-if Rails.env.development?
-  _admin = User.find_or_create_by!(email_address: "admin@example.com") do |u|
-    u.password = "password"
-    u.password_confirmation = "password"
-  end
+raise unless Rails.env.development?
+_admin = User.find_or_create_by!(email_address: "admin@example.com") do |u|
+  u.display_name = "admin"
+  u.password = "password"
+  u.password_confirmation = "password"
+end
 
-  _basic_user = User.find_or_create_by!(email_address: "user@example.com") do |u|
-    u.password = "password"
-    u.password_confirmation = "password"
-  end
+basic_user = User.find_or_create_by!(email_address: "user@example.com") do |u|
+  u.display_name = "user"
+  u.password = "password"
+  u.password_confirmation = "password"
 end
 
 def as_ascents(colors, base_time)
@@ -69,6 +70,7 @@ ascents_data = [
 epoch = Time.zone.parse("2025-01-01 00:00:00")
 sessions = 50.times.map do |x|
   {
+    user: basic_user,
     description: "session #{x}",
     ascents: as_ascents(
       ascents_data[x % ascents_data.length],

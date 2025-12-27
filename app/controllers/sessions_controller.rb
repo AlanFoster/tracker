@@ -5,18 +5,18 @@ class SessionsController < ApplicationController
   end
 
   def show
-    @session = Session.find(params[:id])
+    @session = Current.user.sessions.find(params[:id])
   end
 
   def new
     @sessions = paginated_sessions
-    @session = Session.new
+    @session = Current.user.sessions.build
     @show_modal = true
     render :index
   end
 
   def create
-    @session = Session.new session_params
+    @session = Current.user.sessions.build session_params
     @sessions = paginated_sessions
     @show_modal = true
     if @session.save
@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
   end
 
   def update
-    @session = Session.find(params[:id])
+    @session = Current.user.sessions.find(params[:id])
     @sessions = paginated_sessions
     if @session.update session_params
       redirect_to session_path(@session), notice: 'Session updated successfully!'
@@ -39,7 +39,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session = Session.where(id: params[:id]).first
+    session = Current.user.sessions.where(id: params[:id]).first
     session.destroy
     redirect_to sessions_path, notice: "Session #{session&.title} deleted successfully!"
   end
@@ -49,7 +49,9 @@ class SessionsController < ApplicationController
   private
 
   def paginated_sessions
-    Session.order(id: :desc)
+    Current.user
+           .sessions
+           .order(id: :desc)
            .page(params[:page])
            .per([params.fetch(:per_page, 10).to_i, 100].min)
            .order(created_at: :desc)

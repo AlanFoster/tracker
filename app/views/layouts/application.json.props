@@ -5,7 +5,8 @@ json.data(dig: path) do
   if Current.user
     json.currentUser do
       json.id Current.user.id
-      json.email_address Current.user.email_address
+      json.displayName Current.user.display_name
+      json.emailAddress Current.user.email_address
 
       json.signoutForm do
         form_props(url: user_session_path, method: :delete) do |f|
@@ -13,6 +14,7 @@ json.data(dig: path) do
         end
       end
     end
+    json.profilePath edit_user_url
   end
 
   yield json

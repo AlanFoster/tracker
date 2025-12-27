@@ -1,16 +1,17 @@
-import { Layout } from '@javascript/components/Layout';
+import {Layout} from '@javascript/components/Layout';
 import SessionCard from '@javascript/components/SessionCard';
-import { useAppSelector } from '@javascript/applications/main/store';
-import { Box, Link, TablePagination, Typography } from '@mui/material';
-import { NavigationContext, useContent } from '@thoughtbot/superglue';
-import React, { useContext } from 'react';
+import {useAppSelector} from '@javascript/applications/main/store';
+import {Button, Box, Link, TablePagination, Typography, Card, CardContent} from '@mui/material';
+import {NavigationContext, useContent} from '@thoughtbot/superglue';
+import React, {useContext} from 'react';
 import SessionModalForm from './SessionModalForm';
 import SessionsSummary from './SessionsSummary';
+import AddIcon from "@mui/icons-material/Add";
 
 export default function SessionsIndex() {
-  const { sessions, newSessionPath, createSessionModal, sessionSummary }
+  const {sessions, newSessionPath, createSessionModal, sessionSummary}
     = useContent() as any;
-  const { visit, navigateTo, pageKey } = useContext(NavigationContext);
+  const {visit, navigateTo, pageKey} = useContext(NavigationContext);
   const validationErrors = useAppSelector(
     state => state.flash.postFormErrors,
   );
@@ -50,18 +51,18 @@ export default function SessionsIndex() {
     <Layout>
       <Box mb={4}>
         <Typography variant="h4">Overview</Typography>
-          {createSessionModal.showModal &&
-              <SessionModalForm
-                  sessionForm={createSessionModal.newSessionForm}
-                  showModal={createSessionModal.showModal}
-                  validationErrors={validationErrors}
-                  onClose={() => {
-                    visit(createSessionModal.backPath, {
-                        pageKey
-                    })
-                  }}
-              />
-          }
+        {createSessionModal.showModal &&
+          <SessionModalForm
+            sessionForm={createSessionModal.newSessionForm}
+            showModal={createSessionModal.showModal}
+            validationErrors={validationErrors}
+            onClose={() => {
+              visit(createSessionModal.backPath, {
+                pageKey
+              })
+            }}
+          />
+        }
         <Box display="flex" justifyContent="center" alignItems="center">
           <SessionsSummary {...sessionSummary} />
         </Box>
@@ -69,44 +70,66 @@ export default function SessionsIndex() {
 
       <Box>
         <Typography variant="h5">Sessions</Typography>
-
-        {sessions.meta.count === 0
+        {sessionSummary.totalSessions === 0
           ? (
-              <Typography>
-                No sessions created yet.
-                {' '}
-                <Link href={newSessionPath} data-sg-visit>
-                  Create your first session.
-                </Link>
-              </Typography>
-            )
+            <Card>
+              <CardContent>
+                <Typography mb={2}>
+                  No sessions created yet.
+                </Typography>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Button
+                    href={newSessionPath}
+                    variant='contained'
+                    startIcon={<AddIcon/>}
+                    data-sg-visit
+                  >
+                    Create your first session.
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          )
           : (
-              <Link href={newSessionPath} data-sg-visit>
-                New Session
-              </Link>
-            )}
+            <Button
+              href={newSessionPath}
+              variant='contained'
+              startIcon={<AddIcon/>}
+              data-sg-visit
+            >
+              New Session
+            </Button>
+          )}
 
-        <TablePagination
-          component="div"
-          count={sessions.meta.totalItems}
-          page={sessions.meta.currentPage - 1}
-          rowsPerPage={sessions.meta.perPage}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {sessionSummary.totalSessions > 0 && (
+          <>
+            <TablePagination
+              component="div"
+              count={sessions.meta.totalItems}
+              page={sessions.meta.currentPage - 1}
+              rowsPerPage={sessions.meta.perPage}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
 
-        {sessions.data.map(session => (
-          <SessionCard key={session.id} session={session} />
-        ))}
+            {sessions.data.map(session => (
+              <SessionCard key={session.id} session={session}/>
+            ))}
 
-        <TablePagination
-          component="div"
-          count={sessions.meta.totalItems}
-          page={sessions.meta.currentPage - 1}
-          rowsPerPage={sessions.meta.perPage}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            <TablePagination
+              component="div"
+              count={sessions.meta.totalItems}
+              page={sessions.meta.currentPage - 1}
+              rowsPerPage={sessions.meta.perPage}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
       </Box>
     </Layout>
   );
