@@ -16,13 +16,8 @@
 #
 #  user_id  (user_id => users.id)
 #
-class Session < ApplicationRecord
-  has_many :ascents, dependent: :destroy
-  belongs_to :user
-
-  validates :description, length: {minimum: 0, maximum: 64}, allow_blank: true
-
-  def title
-    @title ||= "Session #{created_at.strftime("%Y-%m-%d")}#{description.presence ? " - #{description}" : ''}"
+FactoryBot.define do
+  factory :session do
+    user
   end
 end

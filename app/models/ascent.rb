@@ -4,6 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  color      :integer
+#  completed  :boolean
 #  tries      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -33,4 +34,11 @@ class Ascent < ApplicationRecord
   }
 
   validates :tries, numericality: { greater_than_or_equal_to: 0 }
+  validate :completed_if_flashed
+
+  def completed_if_flashed
+    if tries === 0 && !completed
+      errors.add(:completed, 'If the ascent was flashed, it must be marked as completed')
+    end
+  end
 end

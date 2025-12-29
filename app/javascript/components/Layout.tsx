@@ -120,7 +120,7 @@ function UserProfileMenu({ currentUser, profilePath }) {
         Profile
       </MenuItem>
 
-      <MenuItem onClick={handleSignOut} disabled={isLoading}>
+      <MenuItem component='button' onClick={handleSignOut} disabled={isLoading}>
         Sign out
       </MenuItem>
     </Menu>
@@ -138,13 +138,6 @@ export function Layout({ children }: React.PropsWithChildren) {
         <CssBaseline />
         <AppBar component="nav">
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              sx={{ mr: 2, display: { sm: 'none' } }}
-            >
-            </IconButton>
             <Box
               component="div"
               sx={{ flexGrow: 1, display: { sm: 'block' } }}

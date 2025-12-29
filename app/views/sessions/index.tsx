@@ -63,9 +63,7 @@ export default function SessionsIndex() {
             }}
           />
         }
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <SessionsSummary {...sessionSummary} />
-        </Box>
+        <SessionsSummary {...sessionSummary} />
       </Box>
 
       <Box>

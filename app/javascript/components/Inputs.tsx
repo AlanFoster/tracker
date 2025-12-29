@@ -33,7 +33,14 @@ import type {
   ValidationErrors,
 } from '@thoughtbot/candy_wrapper';
 import type { ReactNode } from 'react';
-import { Button as MuiButton, TextField as MuiTextField } from '@mui/material';
+import {
+  Button as MuiButton,
+  TextField as MuiTextField,
+  Checkbox as MuiCheckbox,
+  FormControlLabel as MuiFormControlLabel,
+  FormControl as MuiFormControl,
+  FormHelperText as MuiFormHelperText
+} from '@mui/material';
 import React, { createContext, useContext, useMemo } from 'react';
 
 export const ValidationContext = createContext<ValidationErrors>({});
@@ -119,12 +126,13 @@ export function Form({
 export function FieldError({ errorKey }: { errorKey: string | undefined; }) {
   const errorMessage = useErrorMessage(errorKey);
 
-  return <span>{errorMessage}</span>;
+  return <MuiFormHelperText>{errorMessage}</MuiFormHelperText>
 }
 
 export type FieldBaseProps = React.InputHTMLAttributes<HTMLInputElement> & {
   id?: string;
   label: string;
+  fullWidth?: boolean;
   errorKey?: string;
   children?: ReactNode;
 };
@@ -138,15 +146,18 @@ export function FieldBase({
   label,
   errorKey,
   children,
+  fullWidth = false,
   type = 'text',
   ...props
 }: FieldBaseProps) {
+  const errorMessage = useErrorMessage(errorKey);
+
   return (
-    <>
+    <MuiFormControl fullWidth={fullWidth} error={!!errorMessage}>
       <label htmlFor={props.id}>{label}</label>
       {children || <MuiTextField type={type} slotProps={{ htmlInput: props }} />}
       <FieldError errorKey={errorKey} />
-    </>
+    </MuiFormControl>
   );
 }
 
@@ -167,11 +178,13 @@ export function Checkbox({
   includeHidden,
   uncheckedValue,
   errorKey,
+  label,
   ...rest
 }: CheckboxProps) {
   const { name } = rest;
+  const checkbox = <MuiCheckbox type="checkbox" {...rest} />;
   return (
-    <FieldBase {...rest} errorKey={errorKey}>
+    <>
       {includeHidden && (
         <input
           type="hidden"
@@ -180,8 +193,9 @@ export function Checkbox({
           autoComplete="off"
         />
       )}
-      <input type="checkbox" {...rest}></input>
-    </FieldBase>
+      {label ? <MuiFormControlLabel label={label} labelPlacement="start" control={checkbox}/> : checkbox}
+      <FieldError errorKey={errorKey} />
+    </>
   );
 }
 
