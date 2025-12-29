@@ -1,23 +1,22 @@
 import { useAppSelector } from '@javascript/applications/main/store';
+import { Form } from '@javascript/components/Inputs';
 import {
   Alert,
   Box,
   Container,
   createTheme,
-  IconButton,
+  Link,
   Menu,
   MenuItem,
   styled,
   ThemeProvider,
   Toolbar,
-  Link,
   Typography,
 } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
-import { Form } from '@javascript/components/Inputs';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useContent } from '@thoughtbot/superglue';
 import React from 'react';
-import {useContent} from "@thoughtbot/superglue";
 import UserAvatar from './UserAvatar';
 
 class ErrorBoundary extends React.Component {
@@ -64,9 +63,9 @@ const darkTheme = createTheme({
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 function UserProfileMenu({ currentUser, profilePath }) {
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false);
   const formRef = React.useRef(null);
-  const {form, extras} = currentUser.signoutForm;
+  const { form, extras } = currentUser.signoutForm;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -78,53 +77,54 @@ function UserProfileMenu({ currentUser, profilePath }) {
   };
 
   const handleSignOut = (e) => {
-    if (isLoading) return;
-    setIsLoading(true)
+    if (isLoading)
+      return;
+    setIsLoading(true);
     formRef.current?.submit();
     e.stopPropagation();
   };
 
   return (
     <div>
-    <UserAvatar
-      slots={{
-        iconButton: {
-          'aria-label': "account of current user",
-          'aria-controls': "menu-appbar",
-          'aria-haspopup': "true",
-          onClick: handleMenu
-        }
-      }}
-      user={currentUser}
-    />
-    <Menu
-      id="menu-appbar"
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-    >
-      {/* Hidden form that gets triggered for log out */}
-      <Form ref={formRef} {...form} extras={extras} data-sg-remote/>
+      <UserAvatar
+        slots={{
+          iconButton: {
+            'aria-label': 'account of current user',
+            'aria-controls': 'menu-appbar',
+            'aria-haspopup': 'true',
+            'onClick': handleMenu,
+          },
+        }}
+        user={currentUser}
+      />
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {/* Hidden form that gets triggered for log out */}
+        <Form ref={formRef} {...form} extras={extras} data-sg-remote />
 
-      {/*data-sg-visit*/}
-      <MenuItem component='a' href={profilePath} >
-        Profile
-      </MenuItem>
+        {/* data-sg-visit */}
+        <MenuItem component="a" href={profilePath}>
+          Profile
+        </MenuItem>
 
-      <MenuItem onClick={handleSignOut} disabled={isLoading}>
-        Sign out
-      </MenuItem>
-    </Menu>
-  </div>
+        <MenuItem component="button" onClick={handleSignOut} disabled={isLoading}>
+          Sign out
+        </MenuItem>
+      </Menu>
+    </div>
   );
 }
 
@@ -138,19 +138,12 @@ export function Layout({ children }: React.PropsWithChildren) {
         <CssBaseline />
         <AppBar component="nav">
           <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              sx={{ mr: 2, display: { sm: 'none' } }}
-            >
-            </IconButton>
             <Box
               component="div"
               sx={{ flexGrow: 1, display: { sm: 'block' } }}
             >
               <Link
-                href='/'
+                href="/"
                 data-sg-visit
                 color="inherit"
                 underline="none"
@@ -165,7 +158,7 @@ export function Layout({ children }: React.PropsWithChildren) {
                 </Typography>
               </Link>
             </Box>
-            {currentUser && <UserProfileMenu currentUser={currentUser } profilePath={profilePath} />}
+            {currentUser && <UserProfileMenu currentUser={currentUser} profilePath={profilePath} />}
           </Toolbar>
         </AppBar>
         <Offset />

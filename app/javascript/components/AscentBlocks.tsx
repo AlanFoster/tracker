@@ -6,11 +6,12 @@ interface BlockProps {
   href: string;
   color: keyof typeof ascentColors;
   title: string;
+  completed: boolean;
   children: React.ReactNode;
   renderLink: boolean;
 }
 
-export function AscentBlock({ href, color, title, children, renderLink = true }: BlockProps) {
+export function AscentBlock({ href, color, title, completed, children, renderLink = true }: BlockProps) {
   const button = (
     <Button
       title={title}
@@ -21,6 +22,7 @@ export function AscentBlock({ href, color, title, children, renderLink = true }:
         display: 'inline-block',
         textAlign: 'center',
         color: (color === 'white' || color === 'yellow') ? 'black' : 'white',
+        opacity: completed ? 1 : 0.7,
       }}
     >
       {children}
@@ -60,8 +62,9 @@ export function AscentBlockChart({ ascents, href = undefined, children = undefin
         <AscentBlock
           key={ascent.id}
           color={ascent.color}
+          completed={ascent.completed}
           href={href || ascent.editPath}
-          title={`${ascent.tries === 0 ? 'flash' : ascent.tries} ${ascent.createdAt}`}
+          title={`${(ascent.tries === 0 && ascent.completed) ? 'flash' : `${ascent.tries} attempts ${ascent.completed ? '- completed ' : '- not completed'} `} ${ascent.createdAt}`}
           renderLink={renderLink}
         >
           {index + 1}

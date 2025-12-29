@@ -1,28 +1,28 @@
-import React, {useContext} from 'react';
-import {useAppSelector} from '@javascript/applications/login/store';
-import {
-  Button,
-  Alert,
-  ThemeProvider,
-  Avatar,
-  Container,
-  Box,
-  Stack,
-  Typography,
-  createTheme
-} from '@mui/material';
-import {useContent} from '@thoughtbot/superglue';
-import {Form, PasswordField, SubmitButton, TextField} from "@javascript/components/Inputs";
-import CssBaseline from '@mui/material/CssBaseline';
-import useVisitFormSubmit from "@javascript/components/useVisitFormSubmit";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useAppSelector } from '@javascript/applications/login/store';
+import { Form, PasswordField, SubmitButton, TextField } from '@javascript/components/Inputs';
+import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import GoogleIcon from '@mui/icons-material/Google';
 import HandymanIcon from '@mui/icons-material/Handyman';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  createTheme,
+  Stack,
+  ThemeProvider,
+  Typography,
+} from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
+import { useContent } from '@thoughtbot/superglue';
+import React from 'react';
 
 const icons = {
   google_oauth2: <GoogleIcon />,
-  developer: <HandymanIcon />
-}
+  developer: <HandymanIcon />,
+};
 
 const darkTheme = createTheme({
   palette: {
@@ -31,29 +31,30 @@ const darkTheme = createTheme({
 });
 
 export default function UserSessionsIndex() {
-  const flash = useAppSelector((state) => state.flash)
+  const flash = useAppSelector(state => state.flash);
   const [isLoading, handleSubmit] = useVisitFormSubmit();
-  const {userSessionForm, authProviders, forgotPasswordPath}
+  // , forgotPasswordPath
+  const { userSessionForm, authProviders }
     = useContent() as any;
-  const {form, extras, inputs} = userSessionForm;
+  const { form, extras, inputs } = userSessionForm;
   const validationErrors = useAppSelector(
     state => state.flash.postFormErrors,
   );
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline/>
+      <CssBaseline />
 
       <Container component="main" maxWidth="xs">
         <Box sx={{
           marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
         >
-          <Avatar sx={{m: 1, bgcolor: "primary.main"}}>
-            <LockOutlinedIcon/>
+          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
@@ -107,39 +108,41 @@ export default function UserSessionsIndex() {
                 variant="contained"
                 {...inputs.submit}
                 loading={isLoading}
-                sx={{mt: 3, mb: 2}}
+                sx={{ mt: 3, mb: 2 }}
               />
 
               {authProviders.map(({ name, path, displayName }) => (
                 <Button
                   key={name}
-                  component='a'
+                  component="a"
                   href={path}
-                  variant='outlined'
+                  variant="outlined"
                   role={undefined}
                   loading={isLoading}
                   startIcon={icons[name]}
                   sx={{
-                    textTransform: 'none',
-                    fontWeight: 500,
-                    borderRadius: 1,
-                    px: 2,
-                    borderColor: '#5f6368',
-                    color: '#e8eaed',
-                    backgroundColor: '#202124',
+                    'textTransform': 'none',
+                    'fontWeight': 500,
+                    'borderRadius': 1,
+                    'px': 2,
+                    'borderColor': '#5f6368',
+                    'color': '#e8eaed',
+                    'backgroundColor': '#202124',
                     '&:hover': {
                       backgroundColor: '#303134',
-                      borderColor: '#8ab4f8'
+                      borderColor: '#8ab4f8',
                     },
                   }}
                 >
-                  Sign in with {displayName}
+                  Sign in with
+                  {' '}
+                  {displayName}
                 </Button>
               ))}
 
             </Stack>
           </Form>
-          {/*<a href={forgotPasswordPath}>Forgot password</a>*/}
+          {/* <a href={forgotPasswordPath}>Forgot password</a> */}
         </Box>
       </Container>
     </ThemeProvider>

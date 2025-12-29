@@ -42,6 +42,14 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+Capybara.register_driver :playwright_chromium do |app|
+  Capybara::Playwright::Driver.new(app,
+                                   browser_type: :chromium,
+                                   headless: false)
+end
+Capybara.default_driver = :playwright_chromium
+Capybara.javascript_driver = :playwright_chromium
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
@@ -77,4 +85,20 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  RSpec.configure do |config|
+    # Automatically break into debugger on failed feature tests if not CI
+    config.after(:each, type: :feature) do |example|
+      original_wait_time = Capybara.default_max_wait_time
+
+      page = Capybara.current_session
+      Capybara.default_max_wait_time = 0
+
+      if example.exception && !ENV['CI']
+        require 'pry-byebug'; binding.pry
+      end
+    ensure
+      Capybara.default_max_wait_time = original_wait_time
+    end
+  end
 end

@@ -1,5 +1,5 @@
-import { FieldBase, Form, SubmitButton } from '@javascript/components/Inputs';
 import { ascentTheme } from '@javascript/components/ascentColors';
+import { Checkbox, FieldBase, Form, SubmitButton } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/UseVisitFormSubmit';
 import { Check } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   IconButton,
+  Stack,
   ThemeProvider,
   Typography,
 } from '@mui/material';
@@ -22,7 +23,7 @@ interface ColorPickerProps {
 function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
   return (
     <ThemeProvider theme={ascentTheme}>
-      <ul style={{ listStyle: 'none' }}>
+      <ul style={{ paddingLeft: '9px', listStyle: 'none' }}>
         {colors.map(({ label, value }) => (
           <li key={label} style={{ marginBottom: '1rem' }}>
             <Button
@@ -30,10 +31,11 @@ function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
               variant="contained"
               color={label}
               style={{
-                width: '20rem',
+                width: '100%',
               }}
               onClick={() => onChange(value)}
               endIcon={label === color ? <Check /> : null}
+              data-testid={label === color ? 'selected-color' : null}
             >
               {label}
             </Button>
@@ -44,18 +46,19 @@ function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
   );
 }
 
-export default function AscentForm({ ascentForm, validationErrors }) {
+export default function AscentForm({ ascentForm, validationErrors, onCancel }) {
   const { form, extras, inputs } = ascentForm;
   const [isLoading, handleSubmit] = useVisitFormSubmit();
   const [tries, setTries] = useState(Number(inputs.tries.defaultValue) || 0);
   const [color, setColor] = useState(inputs.color.defaultValue);
 
+  const handleTriesDecrement = () => setTries(Math.max(tries - 1, 0));
+  const handleTriesIncrement = () => setTries(tries + 1);
+
   return (
     <>
-      {/* <pre>{JSON.stringify(ascentForm, null, 4)}</pre> */}
-      {/* <pre>{JSON.stringify(validationErrors, null, 4)}</pre> */}
-
       <Form {...form} extras={extras} validationErrors={validationErrors} {...handleSubmit}>
+        {/* Color picker */}
         <div>
           <input
             type="hidden"
@@ -63,7 +66,7 @@ export default function AscentForm({ ascentForm, validationErrors }) {
             name={inputs.color.name}
             value={color}
           />
-          <FieldBase {...inputs.color} label="Color" errorKey="color">
+          <FieldBase fullWidth {...inputs.color} label="Color" errorKey="color">
             <ColorPicker
               color={color}
               colors={inputs.color.options}
@@ -72,6 +75,7 @@ export default function AscentForm({ ascentForm, validationErrors }) {
           </FieldBase>
         </div>
 
+        {/* Tries picker */}
         <div>
           <input
             type="hidden"
@@ -79,10 +83,10 @@ export default function AscentForm({ ascentForm, validationErrors }) {
             name={inputs.tries.name}
             value={tries}
           />
-          <FieldBase {...inputs.tries} label="Tries" errorKey="tries">
+          <FieldBase fullWidth {...inputs.tries} label="Tries" errorKey="tries">
             <Box display="flex" alignItems="center" gap={1}>
               <IconButton
-                onClick={() => setTries(Math.max(tries - 1, 0))}
+                onClick={handleTriesDecrement}
                 color="primary"
                 aria-label="Decrease"
                 disabled={tries <= 0}
@@ -90,14 +94,14 @@ export default function AscentForm({ ascentForm, validationErrors }) {
                 <RemoveIcon />
               </IconButton>
 
-              <Box width={32} textAlign="center">
-                <Typography variant="body1">
+              <Box textAlign="center">
+                <Typography variant="body1" minWidth="5rem">
                   {tries === 0 ? 'flash' : tries.toString()}
                 </Typography>
               </Box>
 
               <IconButton
-                onClick={() => setTries(tries + 1)}
+                onClick={handleTriesIncrement}
                 color="primary"
                 aria-label="Increase"
               >
@@ -107,10 +111,21 @@ export default function AscentForm({ ascentForm, validationErrors }) {
           </FieldBase>
         </div>
 
-        <div>
-          <SubmitButton variant="contained" {...inputs.submit} loading={isLoading} />
-          {/* <Button variant='outlined' color='secondary'>Cancel</Button> */}
-        </div>
+        {/* Completed? */}
+        <FieldBase {...inputs.completed} label="Topped?" errorKey="completed">
+          <Box>
+            <Checkbox {...inputs.completed} />
+          </Box>
+        </FieldBase>
+
+        <Stack direction="column" spacing={1} p={2}>
+          <SubmitButton fullWidth variant="contained" {...inputs.submit} loading={isLoading} />
+          {onCancel && (
+            <Button fullWidth variant="outlined" onClick={onCancel}>
+              Cancel
+            </Button>
+          )}
+        </Stack>
       </Form>
     </>
   );

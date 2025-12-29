@@ -2,7 +2,9 @@ class AscentsController < ApplicationController
   before_action :set_session!, only: [:new, :edit, :update, :create]
 
   def new
-    @ascent = Ascent.new session: @session, color: @session.ascents.last&.color || Ascent.colors.values[0]
+    @ascent = Ascent.new session: @session,
+                         color: @session.ascents.last&.color || Ascent.colors.values[0],
+                         completed: true
     @show_ascent_modal = true
     render :'sessions/show'
   end
@@ -38,7 +40,7 @@ class AscentsController < ApplicationController
   private
 
   def ascent_params
-    params.require(:ascent).permit(:color, :tries)
+    params.require(:ascent).permit(:color, :tries, :completed)
   end
 
   def set_session!

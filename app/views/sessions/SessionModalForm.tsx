@@ -1,6 +1,9 @@
 import { Form, SubmitButton, TextField } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
-import { Dialog, DialogContent, DialogTitle, Stack } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Dialog, DialogContent, DialogTitle, IconButton, Stack, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 export default function SessionModalForm({
@@ -11,6 +14,8 @@ export default function SessionModalForm({
 }) {
   const { form, extras, inputs } = sessionForm;
   const [isLoading, handleSubmit] = useVisitFormSubmit();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (!showModal) {
     return undefined;
@@ -18,29 +23,47 @@ export default function SessionModalForm({
 
   return (
     showModal && (
-      <Dialog open={showModal} onClose={onClose}>
-        <DialogTitle>New Session</DialogTitle>
-        <DialogContent>
-          <>
-            {/* <pre>{JSON.stringify(sessionForm, null, 4)}</pre> */}
-            {/* <pre>{JSON.stringify(validationErrors, null, 4)}</pre> */}
+      <Dialog
+        open={showModal}
+        onClose={onClose}
+        fullScreen={fullScreen}
+        slotProps={{
+          paper: {
+            sx: {
+              minWidth: { xs: '90vw', sm: 500 },
+            },
+          },
+        }}
+      >
+        {fullScreen
+          && (
+            <AppBar position="relative">
+              <Toolbar>
+                <IconButton edge="start" color="inherit" onClick={onClose}>
+                  <CloseIcon />
+                </IconButton>
+                <Typography variant="h6">New Session</Typography>
+              </Toolbar>
+            </AppBar>
+          )}
 
-            <Form
-              {...form}
-              {...handleSubmit}
-              extras={extras}
-              validationErrors={validationErrors}
-            >
-              <Stack spacing={2} paddingTop={1} width={400}>
-                <TextField
-                  {...inputs.description}
-                  label="Description"
-                  errorKey="description"
-                />
-                <SubmitButton variant="contained" {...inputs.submit} loading={isLoading} />
-              </Stack>
-            </Form>
-          </>
+        {!fullScreen && <DialogTitle>New Session</DialogTitle>}
+        <DialogContent>
+          <Form
+            {...form}
+            {...handleSubmit}
+            extras={extras}
+            validationErrors={validationErrors}
+          >
+            <Stack spacing={2} paddingTop={1}>
+              <TextField
+                {...inputs.description}
+                label="Description (Optional)"
+                errorKey="description"
+              />
+              <SubmitButton variant="contained" {...inputs.submit} loading={isLoading} />
+            </Stack>
+          </Form>
         </DialogContent>
       </Dialog>
     )

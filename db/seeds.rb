@@ -26,7 +26,7 @@ def as_ascents(colors, base_time)
     [color] * count
   end
   all_colors.map.with_index do |color, index|
-    { color: color, tries: 0, created_at: base_time + 2.days + index.minutes }
+    { color: color, tries: 0, created_at: base_time + 2.days + index.minutes, completed: true }
   end
 end
 
@@ -86,7 +86,7 @@ sessions.each do |session|
   session_record.save!
   session[:ascents].each do |ascent|
     session_record.ascents
-                  .find_or_create_by!(tries: 0, created_at: ascent[:created_at])
+                  .find_or_create_by!(tries: 0, completed: true, created_at: ascent[:created_at])
                   .update!(ascent.without(:created_at))
   end
 end

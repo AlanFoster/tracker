@@ -1,21 +1,22 @@
-import React from 'react';
-import {useAppSelector} from '@javascript/applications/login/store';
+import { useAppSelector } from '@javascript/applications/login/store';
+import { Form, SubmitButton, TextField } from '@javascript/components/Inputs';
+import { Layout } from '@javascript/components/Layout';
+import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import {
   Box,
   Card,
-  CardContent, CardHeader,
+  CardContent,
+  CardHeader,
   Stack,
 } from '@mui/material';
-import {useContent} from '@thoughtbot/superglue';
-import {Form, SubmitButton, TextField} from "@javascript/components/Inputs";
-import useVisitFormSubmit from "@javascript/components/useVisitFormSubmit";
-import {Layout} from "@javascript/components/Layout";
+import { useContent } from '@thoughtbot/superglue';
+import React from 'react';
 
 export default function UserSessionsIndex() {
   const [isLoading, handleSubmit] = useVisitFormSubmit();
-  const {editUserForm}
+  const { editUserForm }
     = useContent() as any;
-  const {form, extras, inputs} = editUserForm;
+  const { form, extras, inputs } = editUserForm;
   const validationErrors = useAppSelector(
     state => state.flash.postFormErrors,
   );
@@ -23,10 +24,9 @@ export default function UserSessionsIndex() {
   return (
     <Layout>
       <Card>
-        <CardHeader title='Update Profile'></CardHeader>
+        <CardHeader title="Update Profile"></CardHeader>
         <CardContent>
-          <Box
-          >
+          <Box>
             <Form
               {...form}
               {...handleSubmit}

@@ -1,10 +1,9 @@
-import { Layout } from '@javascript/components/Layout';
-import { AscentBlockChart } from '@javascript/components/AscentBlocks';
-import { colorsAsEmojis } from '@javascript/components/Emoji';
-import ShareButton from '@javascript/components/ShareButton';
 import { useAppSelector } from '@javascript/applications/main/store';
+import { AscentBlockChart } from '@javascript/components/AscentBlocks';
+import { ascentsAsEmojis } from '@javascript/components/Emoji';
+import { Layout } from '@javascript/components/Layout';
+import ShareButton from '@javascript/components/ShareButton';
 import {
-  Box,
   Breadcrumbs,
   Button,
   Card,
@@ -16,7 +15,7 @@ import {
 import { NavigationContext, useContent } from '@thoughtbot/superglue';
 import React, { useContext } from 'react';
 import AscentFormModal from './AscentModal';
-import ReportSummary from './AscentsSummary';
+import AscentsSummary from './AscentsSummary';
 
 export default function SessionsShow() {
   const { session, ascentModal, backPath } = useContent() as any;
@@ -44,9 +43,7 @@ export default function SessionsShow() {
 
         <Typography variant="h4">Overview</Typography>
 
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <ReportSummary ascentCounts={session.summary.ascentCounts} />
-        </Box>
+        <AscentsSummary ascentCounts={session.summary.ascentCounts} />
 
         <Typography variant="h5">{session.title}</Typography>
 
@@ -61,8 +58,9 @@ export default function SessionsShow() {
             New Ascent
           </Button>
           <ShareButton
+            label="Share"
             onShare={() =>
-              colorsAsEmojis(session.ascents.map(ascent => ascent.color))}
+              ascentsAsEmojis(session.ascents)}
           />
         </Stack>
       </Stack>

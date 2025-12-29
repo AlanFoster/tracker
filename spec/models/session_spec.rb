@@ -24,8 +24,12 @@ RSpec.describe Session, type: :model do
   end
 
   describe 'validations' do
-    it { should validate_length_of(:description).is_at_least(5).is_at_most(64) }
-    it { should_not allow_value('').for(:description) }
-    it { should_not allow_value(nil).for(:description) }
+    subject do
+      FactoryBot.build(:session)
+    end
+
+    it { should validate_length_of(:description).is_at_least(0).is_at_most(64).allow_blank }
+    it { should allow_value('').for(:description) }
+    it { should allow_value(nil).for(:description) }
   end
 end

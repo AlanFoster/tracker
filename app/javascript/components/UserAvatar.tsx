@@ -1,8 +1,8 @@
-import {Avatar, IconButton} from "@mui/material";
-import React from "react";
+import { Avatar, IconButton } from '@mui/material';
+import React from 'react';
 
 export default function ({ user, slots }) {
-  slots ||= {}
+  slots ||= {};
   return (
     <IconButton
       size="large"
@@ -11,5 +11,5 @@ export default function ({ user, slots }) {
     >
       <Avatar>{(user.displayName || 'x')[0].toUpperCase()}</Avatar>
     </IconButton>
-  )
+  );
 }

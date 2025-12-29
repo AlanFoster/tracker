@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2025_12_28_035627) do
+ActiveRecord::Schema[8.2].define(version: 2025_12_29_012017) do
   create_table "ascents", force: :cascade do |t|
     t.integer "color"
+    t.boolean "completed"
     t.datetime "created_at", null: false
     t.integer "session_id", null: false
     t.integer "tries"
