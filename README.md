@@ -22,3 +22,12 @@ Things you may want to cover:
 - Deployment instructions
 
 - ...
+
+### Docker setup
+
+First read the steps within `.env.example`. Then run docker:
+
+```
+docker compose build
+docker compose build up
+```

@@ -1,0 +1,24 @@
+services:
+  service:
+    build:
+      context: .
+      target: production
+    volumes:
+      - .:/rails
+    depends_on:
+      - database
+    env_file:
+      - .env
+    #    restart: always
+    entrypoint: /rails/wait-for-it.sh database:5432 --timeout=30 --
+    command: ./bin/docker-entrypoint -- ./bin/thrust ./bin/rails server
+    ports:
+      - "5000:3000"
+
+  database:
+    image: postgres:18.1-alpine
+    ports:
+      # Bind to an arbitrary port - but avoid 5432 to avoid conflict with the host already running postgres
+      - "5510:5432"
+    env_file:
+      - .env

@@ -1,0 +1,8 @@
+**/.terraform.lock.hcl
+**/.terraform
+**/plan
+**/terraform.tfstate
+**/terraform.tfstate.backup
+easy-rsa
+vpn_certs
+*.tfvars*

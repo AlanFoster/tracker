@@ -115,8 +115,7 @@ function UserProfileMenu({ currentUser, profilePath }) {
         {/* Hidden form that gets triggered for log out */}
         <Form ref={formRef} {...form} extras={extras} data-sg-remote />
 
-        {/* data-sg-visit */}
-        <MenuItem component="a" href={profilePath}>
+        <MenuItem component="a" href={profilePath} data-sg-visit>
           Profile
         </MenuItem>
 

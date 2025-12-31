@@ -9,6 +9,8 @@ gem "rails", github: "rails/rails", ref: "92481359a7f74261059a292a7cea61e68144b5
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 2.1"
+# Use postgresql as the database for Active Record in production
+gem 'pg', '~> 1.1'
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 

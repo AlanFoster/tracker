@@ -4,7 +4,7 @@ OmniAuth.config.allowed_request_methods = %i[get post]
 allowed_providers = %i[]
 allowed_providers << :developer if Rails.env.development?
 
-has_google_auth = Rails.app.creds.require(:google, :client_id) && Rails.app.creds.require(:google, :client_secret)
+has_google_auth = Rails.app.creds.option(:google, :client_id) && Rails.app.creds.option(:google, :client_secret)
 allowed_providers << :google_oauth2 if has_google_auth
 Rails.application.config.x.omniauth.allowed_providers = allowed_providers + allowed_providers.map(&:to_s)
 

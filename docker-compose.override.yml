@@ -1,0 +1,25 @@
+services:
+  service:
+    volumes:
+      - .:/rails
+    depends_on:
+      - database
+    environment:
+      RAILS_FORCE_SSL: false
+      RAILS_ASSUME_SSL: false
+    ports:
+      - "5000:3000"
+
+  development:
+    build:
+      context: .
+      target: production
+    depends_on:
+      - database
+    entrypoint: /rails/wait-for-it.sh database:5432 --timeout=30 --
+    command: echo done
+    env_file:
+      - .env
+    profiles:
+      # Do not run this service by default
+      - donotstart
