@@ -7,6 +7,7 @@ import {
   CardActionArea,
   CardContent,
   CardHeader,
+  Chip,
   IconButton,
   Menu,
   MenuItem,
@@ -42,7 +43,13 @@ export default function SessionCard({ session, view }) {
       {/* Hidden form that triggers the delete */}
       <Form ref={formRef} {...form} extras={extras} data-sg-remote />
       <CardHeader
-        title={session.title}
+        title={(
+          <>
+            {session.title}
+            {' '}
+            <Chip label={session.intent} color="success" variant="outlined" />
+          </>
+        )}
         action={(
           <IconButton aria-label="settings" onClick={handleClick}>
             <MoreVertIcon />

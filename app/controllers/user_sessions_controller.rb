@@ -5,6 +5,8 @@ class UserSessionsController < ApplicationController
   layout 'login'
 
   def new
+    resume_session
+    redirect_to root_path if Current.user.present?
   end
 
   def create

@@ -1,5 +1,6 @@
 json.id session.id
 json.title session.title
+json.intent session.intent
 json.description session.description
 json.createdAt session.created_at
 json.summary do

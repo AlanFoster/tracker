@@ -39,6 +39,8 @@ import {
   FormControl as MuiFormControl,
   FormControlLabel as MuiFormControlLabel,
   FormHelperText as MuiFormHelperText,
+  MenuItem as MuiMenuItem,
+  Select as MuiSelect,
   TextField as MuiTextField,
 } from '@mui/material';
 import React, { createContext, useContext, useMemo } from 'react';
@@ -531,7 +533,7 @@ export function Select({
       );
     }
     else {
-      return <option key={item.label} {...item} />;
+      return <MuiMenuItem key={item.label} {...item}>{item.label}</MuiMenuItem>;
     }
   });
 
@@ -541,10 +543,10 @@ export function Select({
         <input type="hidden" name={name} value="" autoComplete="off" />
       )}
       <FieldBase label={label} errorKey={errorKey} id={id}>
-        <select name={name} id={id} multiple={multiple} {...rest}>
+        <MuiSelect name={name} id={id} multiple={multiple} {...rest}>
           {children}
           {optionElements}
-        </select>
+        </MuiSelect>
       </FieldBase>
     </>
   );

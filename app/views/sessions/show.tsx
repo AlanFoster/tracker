@@ -13,6 +13,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Link,
   Stack,
   ToggleButton,
@@ -150,6 +151,8 @@ export default function SessionsShow() {
         >
           <Typography variant="h5">
             {session.title}
+            {' '}
+            <Chip label={session.intent} color="success" variant="outlined" />
           </Typography>
 
           <Box display="flex" alignItems="center" gap={1}>

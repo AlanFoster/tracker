@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2025_12_29_012017) do
+ActiveRecord::Schema[8.2].define(version: 2025_12_31_144540) do
   create_table "ascents", force: :cascade do |t|
     t.integer "color"
     t.boolean "completed"
@@ -33,6 +33,7 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_29_012017) do
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "description"
+    t.integer "intent", default: 0
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"

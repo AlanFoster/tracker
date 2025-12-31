@@ -27,11 +27,12 @@ pagination_params = { page: params[:page], per_page: params[:per_page] }.compact
 json.createSessionModal do
   if @show_modal
     json.newSessionForm do
-        # TODO: Can't use "props_at: 'data.createSessionModal.newSessionForm'" as it breaks in the redirect scenario
-        form_props(model: @session, url: sessions_path(@session, **pagination_params)) do |f|
-          f.text_field :description
-          f.submit "Add"
-        end
+      # TODO: Can't use "props_at: 'data.createSessionModal.newSessionForm'" as it breaks in the redirect scenario
+      form_props(model: @session, url: sessions_path(@session, **pagination_params)) do |f|
+        f.text_field :description
+        f.select :intent, Session.intents.map { |label, _v| [label.humanize, label] }, selected: Session.intents.first
+        f.submit "Add"
+      end
     end
     json.backPath sessions_path(**pagination_params)
   end

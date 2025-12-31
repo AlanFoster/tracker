@@ -1,4 +1,4 @@
-import { Form, SubmitButton, TextField } from '@javascript/components/Inputs';
+import { Form, Select, SubmitButton, TextField } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogContent, DialogTitle, IconButton, Stack, Toolbar, Typography, useMediaQuery } from '@mui/material';
@@ -60,6 +60,11 @@ export default function SessionModalForm({
                 {...inputs.description}
                 label="Description (Optional)"
                 errorKey="description"
+              />
+              <Select
+                {...inputs.intent}
+                label="Intent"
+                errorKey="intent"
               />
               <SubmitButton variant="contained" {...inputs.submit} loading={isLoading} />
             </Stack>

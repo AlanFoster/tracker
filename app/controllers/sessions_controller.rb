@@ -58,6 +58,6 @@ class SessionsController < ApplicationController
   end
 
   def session_params
-    params.require(:session).permit(:description)
+    params.require(:session).permit(:description, :intent)
   end
 end
