@@ -127,6 +127,41 @@ function UserProfileMenu({ currentUser, profilePath }) {
   );
 }
 
+export function Flash({ flash }) {
+  return (
+    <>
+      {flash.success && (
+        <Box mb={2}>
+          <Alert variant="filled" severity="success">
+            {flash.success}
+          </Alert>
+        </Box>
+      )}
+      {flash.notice && (
+        <Box mb={2}>
+          <Alert variant="filled" severity="info">
+            {flash.notice}
+          </Alert>
+        </Box>
+      )}
+      {flash.alert && (
+        <Box mb={2}>
+          <Alert variant="filled" severity="info">
+            {flash.alert}
+          </Alert>
+        </Box>
+      )}
+      {flash.error && (
+        <Box mb={2}>
+          <Alert variant="filled" severity="error">
+            {flash.error}
+          </Alert>
+        </Box>
+      )}
+    </>
+  );
+}
+
 export function Layout({ children }: React.PropsWithChildren) {
   const flash = useAppSelector(state => state.flash);
   const { currentUser, profilePath } = useContent();
@@ -161,29 +196,15 @@ export function Layout({ children }: React.PropsWithChildren) {
           </Toolbar>
         </AppBar>
         <Offset />
-        <Container maxWidth="lg">
+        <Container
+          maxWidth="lg"
+          sx={{
+            minHeight: '100vh',
+            marginBottom: '2rem',
+          }}
+        >
           <Box pt={4}>
-            {flash.success && (
-              <Box mb={2}>
-                <Alert variant="filled" severity="success">
-                  {flash.success}
-                </Alert>
-              </Box>
-            )}
-            {flash.notice && (
-              <Box mb={2}>
-                <Alert variant="filled" severity="info">
-                  {flash.notice}
-                </Alert>
-              </Box>
-            )}
-            {flash.error && (
-              <Box mb={2}>
-                <Alert variant="filled" severity="error">
-                  {flash.error}
-                </Alert>
-              </Box>
-            )}
+            <Flash flash={flash} />
 
             {children}
           </Box>

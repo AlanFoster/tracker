@@ -40,7 +40,7 @@ class SessionsController < ApplicationController
 
   def destroy
     session = Current.user.sessions.where(id: params[:id]).first
-    session.destroy
+    session&.destroy
     redirect_to sessions_path, notice: "Session #{session&.title} deleted successfully!"
   end
 

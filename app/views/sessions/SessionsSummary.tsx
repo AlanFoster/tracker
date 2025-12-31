@@ -1,7 +1,7 @@
 import TransferWithinAStation from '@mui/icons-material/DirectionsWalk';
 import RocketLaunch from '@mui/icons-material/RocketLaunch';
 import Scale from '@mui/icons-material/Scale';
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import React from 'react';
 
 interface SessionsSummaryProps {
@@ -34,20 +34,14 @@ export default function SessionsSummary({
   ];
 
   return (
-    <Box
-      display="flex"
+    <Grid
+      container
       justifyContent="center"
-      alignItems="center"
-      flexDirection={{ xs: 'column', sm: 'row' }}
+      spacing={2}
       gap={2}
-      sx={{
-        '& > *': {
-          width: { xs: '100%', sm: 'auto' },
-        },
-      }}
     >
       {summary.map(item => (
-        <Box key={item.title}>
+        <Grid item={true} data-testid={`ascents-summary-${item.color}`} key={item.title}>
           <Card
             sx={{
               p: 2,
@@ -72,8 +66,8 @@ export default function SessionsSummary({
             </CardContent>
             <Box sx={{ ml: 2 }}>{item.icon}</Box>
           </Card>
-        </Box>
+        </Grid>
       ))}
-    </Box>
+    </Grid>
   );
 }

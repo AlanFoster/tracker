@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 
 interface CopyButtonProps {
   onShare: () => string;
+  disabled?: boolean;
   label?: string;
 }
 
-export default function ShareButton({ onShare, label = 'Share' }: CopyButtonProps) {
+export default function ShareButton({ onShare, disabled = false, label = 'Share' }: CopyButtonProps) {
   const [isCopying, setIsCopying] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -27,7 +28,7 @@ export default function ShareButton({ onShare, label = 'Share' }: CopyButtonProp
   };
 
   return (
-    <Button variant="outlined" onClick={handleCopy} disabled={isCopying}>
+    <Button variant="outlined" onClick={handleCopy} disabled={isCopying || disabled}>
       {isCopying ? 'Copying...' : copied ? 'Copied!' : label}
     </Button>
   );

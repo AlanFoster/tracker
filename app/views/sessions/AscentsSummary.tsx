@@ -4,6 +4,7 @@ import {
   Box,
   Card,
   CardContent,
+  Grid,
   ThemeProvider,
   Typography,
 } from '@mui/material';
@@ -22,20 +23,14 @@ export default function AscentsSummary({ ascentCounts }) {
   }));
 
   return (
-    <Box
-      display="flex"
+    <Grid
+      container
       justifyContent="center"
-      alignItems="center"
-      flexDirection={{ xs: 'column', sm: 'row' }}
+      spacing={2}
       gap={2}
-      sx={{
-        '& > *': {
-          width: { xs: '100%', sm: 'auto' },
-        },
-      }}
     >
       {summary.map(item => (
-        <Box data-testid={`ascents-summary-${item.color}`} key={item.title}>
+        <Grid item={true} data-testid={`ascents-summary-${item.color}`} key={item.title}>
           <Card
             sx={{
               p: 2,
@@ -72,8 +67,8 @@ export default function AscentsSummary({ ascentCounts }) {
             </CardContent>
             <Box sx={{ ml: 2 }}>{item.icon}</Box>
           </Card>
-        </Box>
+        </Grid>
       ))}
-    </Box>
+    </Grid>
   );
 }

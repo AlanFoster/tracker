@@ -29,27 +29,28 @@ RSpec.describe "Homepage", type: :feature do
         click_link 'Create your first session'
         fill_in 'session[description]', with: 'my first session'
         click_button 'Add'
-        expect(page).to_not have_content 'New Session'
+        expect(page).to_not have_content 'Create your first session'
       end
 
       now "create flash ascents" do
         expect(page).to have_content 'No ascents registered yet.'
 
-        colors = %w[white purple red red]
+        click_link 'Add'
+        colors = %w[white red purple red]
         colors.each do |color|
-          click_link 'New Ascent'
-
           click_button color
           expect(page).to have_selector('[data-testid=selected-color]', text: color.upcase)
           expect(page).to have_content 'flash'
           expect(page).to have_selector("[name='ascent[completed]']:checked", visible: false)
           click_button 'Create'
-          expect(page).to_not have_content 'Create'
+          expect(page).to have_content "#{color} ascent added successfully!"
         end
+
+        click_button 'Cancel'
       end
 
       now "create invalid flash ascents" do
-        click_link 'New Ascent'
+        click_link 'Add'
         click_button 'red'
         expect(page).to have_content 'flash'
         expect(page).to have_selector("[name='ascent[completed]']:checked", visible: false)
@@ -63,7 +64,6 @@ RSpec.describe "Homepage", type: :feature do
         now "correct the mistake" do
           find('[aria-label="Increase"]').click
         end
-
         click_button 'Create'
         expect(page).to_not have_content 'Create'
       end

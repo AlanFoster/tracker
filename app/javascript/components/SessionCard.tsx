@@ -1,4 +1,4 @@
-import { AscentBlockChart } from '@javascript/components/AscentBlocks';
+import { AscentsOverview } from '@javascript/components/AscentsOverview';
 import { Form } from '@javascript/components/Inputs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import React, { useRef, useState } from 'react';
 
-export default function SessionCard({ session }) {
+export default function SessionCard({ session, view }) {
   const { form, extras } = session.deleteForm;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -51,7 +51,7 @@ export default function SessionCard({ session }) {
       />
       <CardActionArea href={session.detailPath} data-sg-visit>
         <CardContent sx={{ textAlign: 'center' }}>
-          <AscentBlockChart ascents={session.ascents} renderLink={false} />
+          <AscentsOverview ascents={session.ascents} renderLink={false} view={view} />
         </CardContent>
       </CardActionArea>
       <Menu

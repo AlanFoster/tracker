@@ -19,7 +19,8 @@ class AscentsController < ApplicationController
     @ascent = @session.ascents.new ascent_params
     @show_ascent_modal = true
     if @ascent.save
-      redirect_to session_path(@session), notice: "#{@ascent.color} ascent added successfully!"
+      # Optimize for the user adding multiple new ascents sequentially
+      redirect_to new_session_ascent_path(@session.id), notice: "#{@ascent.color} ascent added successfully!"
     else
       flash.now[:postFormErrors] = @ascent.errors.as_json
       render :'sessions/show', alert: 'Failed to add ascent'
@@ -44,6 +45,6 @@ class AscentsController < ApplicationController
   end
 
   def set_session!
-    @session = Session.find(params[:session_id])
+    @session = Current.user.sessions.find(params[:session_id])
   end
 end

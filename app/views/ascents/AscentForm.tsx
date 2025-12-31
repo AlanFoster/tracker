@@ -8,7 +8,6 @@ import {
   Box,
   Button,
   IconButton,
-  Stack,
   ThemeProvider,
   Typography,
 } from '@mui/material';
@@ -46,87 +45,101 @@ function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
   );
 }
 
-export default function AscentForm({ ascentForm, validationErrors, onCancel }) {
+export default function AscentForm({ slots, slotProps, ascentForm, validationErrors, onCancel }) {
   const { form, extras, inputs } = ascentForm;
   const [isLoading, handleSubmit] = useVisitFormSubmit();
   const [tries, setTries] = useState(Number(inputs.tries.defaultValue) || 0);
   const [color, setColor] = useState(inputs.color.defaultValue);
+  const formId = React.useId();
 
   const handleTriesDecrement = () => setTries(Math.max(tries - 1, 0));
   const handleTriesIncrement = () => setTries(tries + 1);
 
+  const Content = slots.content || React.Fragment;
+  const Actions = slots.actions || React.Fragment;
+
   return (
     <>
-      <Form {...form} extras={extras} validationErrors={validationErrors} {...handleSubmit}>
-        {/* Color picker */}
-        <div>
-          <input
-            type="hidden"
-            id={inputs.color.id}
-            name={inputs.color.name}
-            value={color}
-          />
-          <FieldBase fullWidth {...inputs.color} label="Color" errorKey="color">
-            <ColorPicker
-              color={color}
-              colors={inputs.color.options}
-              onChange={color => setColor(color)}
+      <Content {...slotProps.content}>
+        <Form
+          {...form}
+          id={formId}
+          extras={extras}
+          validationErrors={validationErrors}
+          {...handleSubmit}
+        >
+          {/* Color picker */}
+          <div>
+            <input
+              type="hidden"
+              id={inputs.color.id}
+              name={inputs.color.name}
+              value={color}
             />
-          </FieldBase>
-        </div>
+            <FieldBase fullWidth {...inputs.color} label="Color" errorKey="color">
+              <ColorPicker
+                color={color}
+                colors={inputs.color.options}
+                onChange={color => setColor(color)}
+              />
+            </FieldBase>
+          </div>
 
-        {/* Tries picker */}
-        <div>
-          <input
-            type="hidden"
-            id={inputs.tries.id}
-            name={inputs.tries.name}
-            value={tries}
-          />
-          <FieldBase fullWidth {...inputs.tries} label="Tries" errorKey="tries">
-            <Box display="flex" alignItems="center" gap={1}>
-              <IconButton
-                onClick={handleTriesDecrement}
-                color="primary"
-                aria-label="Decrease"
-                disabled={tries <= 0}
-              >
-                <RemoveIcon />
-              </IconButton>
+          {/* Tries picker */}
+          <div>
+            <input
+              type="hidden"
+              id={inputs.tries.id}
+              name={inputs.tries.name}
+              value={tries}
+            />
+            <FieldBase fullWidth {...inputs.tries} label="Tries" errorKey="tries">
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconButton
+                  onClick={handleTriesDecrement}
+                  color="primary"
+                  aria-label="Decrease"
+                  disabled={tries <= 0}
+                >
+                  <RemoveIcon />
+                </IconButton>
 
-              <Box textAlign="center">
-                <Typography variant="body1" minWidth="5rem">
-                  {tries === 0 ? 'flash' : tries.toString()}
-                </Typography>
+                <Box textAlign="center">
+                  <Typography variant="body1" minWidth="5rem">
+                    {tries === 0 ? 'flash' : tries.toString()}
+                  </Typography>
+                </Box>
+
+                <IconButton
+                  onClick={handleTriesIncrement}
+                  color="primary"
+                  aria-label="Increase"
+                >
+                  <AddIcon />
+                </IconButton>
               </Box>
+            </FieldBase>
+          </div>
 
-              <IconButton
-                onClick={handleTriesIncrement}
-                color="primary"
-                aria-label="Increase"
-              >
-                <AddIcon />
-              </IconButton>
+          {/* Completed? */}
+          <FieldBase {...inputs.completed} label="Topped?" errorKey="completed">
+            <Box>
+              <Checkbox {...inputs.completed} />
             </Box>
           </FieldBase>
-        </div>
+        </Form>
+      </Content>
 
-        {/* Completed? */}
-        <FieldBase {...inputs.completed} label="Topped?" errorKey="completed">
-          <Box>
-            <Checkbox {...inputs.completed} />
-          </Box>
-        </FieldBase>
-
-        <Stack direction="column" spacing={1} p={2}>
-          <SubmitButton fullWidth variant="contained" {...inputs.submit} loading={isLoading} />
+      <Actions {...slotProps.actions}>
+        <Box sx={{ display: 'flex', width: '100%', flexDirection: 'column', gap: 1 }}>
+          <SubmitButton fullWidth variant="contained" {...inputs.submit} loading={isLoading} form={formId} />
           {onCancel && (
             <Button fullWidth variant="outlined" onClick={onCancel}>
               Cancel
             </Button>
           )}
-        </Stack>
-      </Form>
+        </Box>
+      </Actions>
     </>
   );
 }

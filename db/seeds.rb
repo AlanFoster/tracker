@@ -306,11 +306,12 @@ ascents_data = [
   ]
 ]
 
-epoch = Time.zone.parse("2025-01-01 00:00:00")
-sessions = 50.times.map do |x|
+total_sessions = 50
+epoch = (Time.now - total_sessions.days).change(hour: 18, min: 30, sec: 0)
+sessions = total_sessions.times.map do |x|
   {
     user: basic_user,
-    description: "session #{x}",
+    description: "session #{x + 1}",
     ascents: ascents_data[x % ascents_data.length].map do |ascent|
       ascent.merge(created_at: epoch + x.days + ascent[:created_at])
     end,
