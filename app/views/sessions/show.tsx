@@ -19,7 +19,9 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { NavigationContext, useContent } from '@thoughtbot/superglue';
 import React, { useContext } from 'react';
@@ -29,6 +31,7 @@ import AscentsSummary from './AscentsSummary';
 function bucketEventsByTime(events, bucketSizeMs = 1000 * 60 * 5) {
   const countsByBucket = new Map();
   const eventTypesSet = new Set();
+  const totals = new Map();
 
   // floor date to bucket boundary
   function floorToBucket(date) {
@@ -52,6 +55,8 @@ function bucketEventsByTime(events, bucketSizeMs = 1000 * 60 * 5) {
 
     const bucket = countsByBucket.get(key);
     bucket[eventType] = (bucket[eventType] ?? 0) + 1;
+
+    totals.set(eventType, (totals.get(eventType) || 0) + 1);
   }
 
   // Determine bucket range
@@ -76,7 +81,7 @@ function bucketEventsByTime(events, bucketSizeMs = 1000 * 60 * 5) {
     current = new Date(current.getTime() + bucketSizeMs);
   }
 
-  return { data: result, eventTypes: Array.from(eventTypesSet) };
+  return { data: result, eventTypes: Array.from(eventTypesSet), totals };
 }
 
 export default function SessionsShow() {
@@ -87,6 +92,8 @@ export default function SessionsShow() {
   const { visit } = useContext(NavigationContext);
 
   const [view, setView] = React.useState('grid');
+  const theme = useTheme();
+  const smallSize = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleViewChange = (event, newView) => {
     if (newView !== null) {
@@ -94,7 +101,7 @@ export default function SessionsShow() {
     }
   };
 
-  const { data, eventTypes } = bucketEventsByTime(
+  const { data, eventTypes, totals } = bucketEventsByTime(
     session.ascents.map(ascent => ({ date: ascent.createdAt, eventType: ascent.color })),
   );
 
@@ -131,13 +138,13 @@ export default function SessionsShow() {
           ]}
           series={[...eventTypes].map(eventType =>
             ({
-              label: eventType[0].toUpperCase() + eventType.substring(1),
+              label: `${totals.get(eventType)} ${eventType[0].toUpperCase()}${eventType.substring(1)}`,
               data: data.map(x => x[eventType]),
               stack: 'events',
               color: ascentColors[eventType],
             }),
           )}
-          height={250}
+          height={smallSize ? 160 : 250}
         />
         <AscentsSummary ascentCounts={session.summary.ascentCounts} />
 
