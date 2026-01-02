@@ -57,6 +57,10 @@ env:
   secret:
     - RAILS_MASTER_KEY
     - DATABASE_URL
+    # oauth
+    - GOOGLE__CLIENT_ID
+    - GOOGLE__CLIENT_SECRET
+    - CONTACT__EMAIL
 
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.

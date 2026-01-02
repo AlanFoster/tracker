@@ -1,0 +1,1 @@
+json.contactEmail Rails.app.creds.option(:contact, :email)

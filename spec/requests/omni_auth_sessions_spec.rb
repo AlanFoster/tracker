@@ -39,7 +39,7 @@ RSpec.describe OmniAuth::SessionsController, type: :request do
 
         it "logs in" do
           get "/auth/google_oauth2/callback"
-          expect(response).to redirect_to(root_path)
+          expect(response).to redirect_to(sessions_path)
           follow_redirect!
           expect(body).to include(%Q{"displayName":"#{user.display_name}","emailAddress":"#{user.email_address}"})
         end
@@ -90,7 +90,7 @@ RSpec.describe OmniAuth::SessionsController, type: :request do
 
       it "logs in" do
         get "/auth/google_oauth2/callback"
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(sessions_path)
         follow_redirect!
         expect(body).to match(%r{"displayName":"climber-\d+","emailAddress":"test@example.com"})
       end

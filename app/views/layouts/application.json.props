@@ -1,7 +1,6 @@
 path = request.format.json? ? param_to_dig_path(params[:props_at]) : nil
 
 json.data(dig: path) do
-
   if Current.user
     json.currentUser do
       json.id Current.user.id

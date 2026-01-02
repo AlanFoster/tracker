@@ -6,7 +6,7 @@ RSpec.describe "Homepage", type: :feature do
   describe 'a valid login' do
     it 'logs in successfully' do
       page.visit '/'
-      expect(page).to have_content 'Sign in'
+      click_link 'Sign In'
 
       # Fill in the login form
       fill_in "email_address", with: user.email_address
@@ -21,7 +21,7 @@ RSpec.describe "Homepage", type: :feature do
 
     it 'allows signing out' do
       page.visit '/'
-      expect(page).to have_content 'Sign in'
+      click_link 'Sign In'
 
       # Fill in the login form
       fill_in "email_address", with: user.email_address
@@ -39,6 +39,7 @@ RSpec.describe "Homepage", type: :feature do
   describe 'an invalid' do
     it 'notifies the user about the login failure' do
       page.visit '/'
+      click_link 'Sign In'
 
       # Fill in the login form
       fill_in "email_address", with: user.email_address

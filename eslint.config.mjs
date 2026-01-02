@@ -4,6 +4,7 @@ export default antfu({
   ignores: [
     'public/vite-dev/**',
     'node_modules/**',
+    'config/deploy.yml',
   ],
   stylistic: {
     semi: true,

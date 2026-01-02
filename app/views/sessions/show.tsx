@@ -1,9 +1,9 @@
+import { ascentColors } from '@javascript/applications/main/components/ascentColors';
+import { AscentsOverview } from '@javascript/applications/main/components/AscentsOverview';
+import { ascentsAsEmojis } from '@javascript/applications/main/components/Emoji';
+import { Layout } from '@javascript/applications/main/components/Layout';
+import ShareButton from '@javascript/applications/main/components/ShareButton';
 import { useAppSelector } from '@javascript/applications/main/store';
-import { ascentColors } from '@javascript/components/ascentColors';
-import { AscentsOverview } from '@javascript/components/AscentsOverview';
-import { ascentsAsEmojis } from '@javascript/components/Emoji';
-import { Layout } from '@javascript/components/Layout';
-import ShareButton from '@javascript/components/ShareButton';
 import AddIcon from '@mui/icons-material/Add';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ViewStreamIcon from '@mui/icons-material/ViewStream';

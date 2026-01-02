@@ -1,5 +1,5 @@
+import { Flash } from '@javascript/applications/main/components/Layout';
 import { useAppSelector } from '@javascript/applications/main/store';
-import { Flash } from '@javascript/components/Layout';
 import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Toolbar, Typography, useMediaQuery } from '@mui/material';
 import AppBar from '@mui/material/AppBar';

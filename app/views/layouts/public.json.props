@@ -1,6 +1,11 @@
 path = request.format.json? ? param_to_dig_path(params[:props_at]) : nil
 
 json.data(dig: path) do
+  json.appName 'Tracker'
+  json.termsPath terms_path
+  json.privacyPath privacy_path
+  json.signInPath new_user_session_path
+
   yield json
 end
 

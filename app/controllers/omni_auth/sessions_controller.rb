@@ -3,7 +3,7 @@ class OmniAuth::SessionsController < ApplicationController
 
   def create
     if Current.user_session.present?
-      redirect_to root_path
+      redirect_to sessions_path
     end
 
     email = user_info.dig(:info, :email)
@@ -20,7 +20,7 @@ class OmniAuth::SessionsController < ApplicationController
     end
 
     start_new_session_for user
-    redirect_to root_path
+    redirect_to sessions_path
   end
 
   def failure

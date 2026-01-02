@@ -1,4 +1,4 @@
-import { ascentColors } from '@javascript/components/ascentColors';
+import { ascentColors } from '@javascript/applications/main/components/ascentColors';
 import {
   Avatar,
   Box,

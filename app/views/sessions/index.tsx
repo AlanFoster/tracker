@@ -1,6 +1,6 @@
+import { Layout } from '@javascript/applications/main/components/Layout';
+import SessionCard from '@javascript/applications/main/components/SessionCard';
 import { useAppSelector } from '@javascript/applications/main/store';
-import { Layout } from '@javascript/components/Layout';
-import SessionCard from '@javascript/components/SessionCard';
 import AddIcon from '@mui/icons-material/Add';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ViewStreamIcon from '@mui/icons-material/ViewStream';

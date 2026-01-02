@@ -1,4 +1,4 @@
-import { ascentTheme } from '@javascript/components/ascentColors';
+import { ascentTheme } from '@javascript/applications/main/components/ascentColors';
 import { Checkbox, FieldBase, Form, SubmitButton } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import { Check } from '@mui/icons-material';

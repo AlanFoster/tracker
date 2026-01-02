@@ -1,6 +1,6 @@
-import { useAppSelector } from '@javascript/applications/login/store';
+import { Layout } from '@javascript/applications/main/components/Layout';
+import { useAppSelector } from '@javascript/applications/public/store';
 import { Form, SubmitButton, TextField } from '@javascript/components/Inputs';
-import { Layout } from '@javascript/components/Layout';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import {
   Box,

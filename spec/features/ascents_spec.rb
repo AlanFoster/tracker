@@ -5,7 +5,7 @@ RSpec.describe "Homepage", type: :feature do
 
   def login_as(user)
     page.visit '/'
-    expect(page).to have_content 'Sign in'
+    click_link 'Sign In'
 
     # Fill in the login form
     fill_in "email_address", with: user.email_address

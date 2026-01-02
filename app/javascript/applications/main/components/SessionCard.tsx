@@ -1,4 +1,4 @@
-import { AscentsOverview } from '@javascript/components/AscentsOverview';
+import { AscentsOverview } from '@javascript/applications/main/components/AscentsOverview';
 import { Form } from '@javascript/components/Inputs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';

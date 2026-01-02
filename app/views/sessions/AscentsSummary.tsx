@@ -1,4 +1,4 @@
-import { ascentTheme } from '@javascript/components/ascentColors';
+import { ascentTheme } from '@javascript/applications/main/components/ascentColors';
 import RocketLaunch from '@mui/icons-material/RocketLaunch';
 import {
   Box,
