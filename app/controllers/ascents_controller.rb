@@ -4,6 +4,7 @@ class AscentsController < ApplicationController
   def new
     @ascent = Ascent.new session: @session,
                          color: @session.ascents.last&.color || Ascent.colors.values[0],
+                         tries: 0,
                          completed: true
     @show_ascent_modal = true
     render :'sessions/show'
@@ -16,7 +17,8 @@ class AscentsController < ApplicationController
   end
 
   def create
-    @ascent = @session.ascents.new ascent_params
+    @ascent = Ascent.new **ascent_params,
+                         session: @session
     @show_ascent_modal = true
     if @ascent.save
       # Optimize for the user adding multiple new ascents sequentially

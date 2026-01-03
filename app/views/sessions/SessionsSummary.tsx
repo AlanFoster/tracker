@@ -41,7 +41,7 @@ export default function SessionsSummary({
       gap={2}
     >
       {summary.map(item => (
-        <Grid item={true} data-testid={`ascents-summary-${item.color}`} key={item.title}>
+        <Grid data-testid={`ascents-summary-${item.color}`} key={item.title}>
           <Card
             sx={{
               p: 2,

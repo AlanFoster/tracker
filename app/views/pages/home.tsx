@@ -49,7 +49,7 @@ function App() {
       {/* Features Section */}
       <Grid container spacing={4}>
         {features.map((feature, index) => (
-          <Grid item xs={12} md={4} key={index}>
+          <Grid xs={12} md={4} key={index}>
             <Card elevation={3}>
               <CardContent>
                 <Typography variant="h5" gutterBottom>

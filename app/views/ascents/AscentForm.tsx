@@ -22,7 +22,7 @@ interface ColorPickerProps {
 function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
   return (
     <ThemeProvider theme={ascentTheme}>
-      <ul style={{ paddingLeft: '9px', listStyle: 'none' }}>
+      <ul style={{ paddingLeft: '9px', paddingRight: '14px', listStyle: 'none' }}>
         {colors.map(({ label, value }) => (
           <li key={label} style={{ marginBottom: '1rem' }}>
             <Button
@@ -50,6 +50,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
   const [isLoading, handleSubmit] = useVisitFormSubmit();
   const [tries, setTries] = useState(Number(inputs.tries.defaultValue) || 0);
   const [color, setColor] = useState(inputs.color.defaultValue);
+  const [completed, setCompleted] = useState(inputs.completed.defaultChecked);
   const formId = React.useId();
 
   const handleTriesDecrement = () => setTries(Math.max(tries - 1, 0));
@@ -57,6 +58,26 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
 
   const Content = slots.content || React.Fragment;
   const Actions = slots.actions || React.Fragment;
+
+  const clearForm = () => {
+    setTries(0);
+    setCompleted(true);
+  };
+
+  const handleChangeCompleted = (event: SelectChangeEvent) => {
+    setCompleted(event.target.checked);
+  };
+
+  const handleSubmitWithFormClear = {
+    onSubmit(event: React.FormEvent<HTMLFormElement>) {
+      handleSubmit.onSubmit(event)
+        .then((visitMetaData) => {
+          if (visitMetaData.redirected) {
+            clearForm();
+          }
+        });
+    },
+  };
 
   return (
     <>
@@ -66,10 +87,10 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
           id={formId}
           extras={extras}
           validationErrors={validationErrors}
-          {...handleSubmit}
+          {...handleSubmitWithFormClear}
         >
           {/* Color picker */}
-          <div>
+          <Box sx={{ marginBottom: '1rem' }}>
             <input
               type="hidden"
               id={inputs.color.id}
@@ -77,13 +98,31 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
               value={color}
             />
             <FieldBase fullWidth {...inputs.color} label="Color" errorKey="color">
-              <ColorPicker
-                color={color}
-                colors={inputs.color.options}
-                onChange={color => setColor(color)}
-              />
+              <Box
+                sx={{
+                  maxHeight: '19rem',
+                  overflowY: 'scroll',
+                }}
+              >
+                <ColorPicker
+                  color={color}
+                  colors={inputs.color.options}
+                  onChange={color => setColor(color)}
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,
+                    width: '100%',
+                    height: '2rem',
+                    background: 'linear-gradient(to bottom, transparent, rgba(57,57,57,1))',
+                    pointerEvents: 'none',
+                  }}
+                >
+                </Box>
+              </Box>
             </FieldBase>
-          </div>
+          </Box>
 
           {/* Tries picker */}
           <div>
@@ -124,7 +163,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
           {/* Completed? */}
           <FieldBase {...inputs.completed} label="Topped?" errorKey="completed">
             <Box>
-              <Checkbox {...inputs.completed} />
+              <Checkbox {...inputs.completed} checked={completed} onChange={handleChangeCompleted} />
             </Box>
           </FieldBase>
         </Form>

@@ -22,7 +22,7 @@ export default function useVisitFormSubmit() {
       const url = form.getAttribute('action');
       const method = (form.getAttribute('method') || 'POST').toUpperCase();
 
-      visit(url, {
+      return visit(url, {
         method,
         body: new FormData(form),
         pageKey,

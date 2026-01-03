@@ -184,7 +184,7 @@ export function Checkbox({
   ...rest
 }: CheckboxProps) {
   const { name } = rest;
-  const checkbox = <MuiCheckbox type="checkbox" {...rest} />;
+  const checkbox = <MuiCheckbox {...rest} />;
   return (
     <>
       {includeHidden && (
