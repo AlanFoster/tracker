@@ -12,7 +12,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { formatDistanceToNow } from 'date-fns';
+import { differenceInMinutes, format, formatDistanceToNow } from 'date-fns';
 import React from 'react';
 
 interface BlockProps {
@@ -64,6 +64,7 @@ export function AscentListItems({ ascents, renderLink = true }) {
   return (
     <List>
       {ascents.map((ascent, index) => {
+        const createdAt = new Date(ascent.createdAt);
         const linkProps = renderLink
           ? {
               'component': 'a',
@@ -94,7 +95,9 @@ export function AscentListItems({ ascents, renderLink = true }) {
                 secondary={(
                   <React.Fragment>
                     <Tooltip title={ascent.createdAt}>
-                      {formatDistanceToNow(new Date(ascent.createdAt), { addSuffix: true })}
+                      <span>
+                        {differenceInMinutes(new Date(), createdAt) < 60 ? formatDistanceToNow(createdAt, { addSuffix: true }) : format(createdAt, 'yyyy/MM/dd - H:m:s')}
+                      </span>
                     </Tooltip>
                   </React.Fragment>
                 )}
