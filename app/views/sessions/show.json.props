@@ -17,6 +17,7 @@ json.ascentModal do
         f.select :color, Ascent.colors.keys
         f.text_field :tries
         f.check_box :completed
+        f.text_area :notes
         f.submit @ascent.new_record? ? 'Create' : 'Update'
       end
     end

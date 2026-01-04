@@ -5,6 +5,7 @@
 #  id         :integer          not null, primary key
 #  color      :integer
 #  completed  :boolean
+#  notes      :string
 #  tries      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -35,6 +36,8 @@ class Ascent < ApplicationRecord
 
   validates :tries, numericality: { greater_than_or_equal_to: 0 }
   validate :completed_if_flashed
+
+  validates :notes, length: {minimum: 0, maximum: 256}, allow_blank: true
 
   def completed_if_flashed
     if tries === 0 && !completed

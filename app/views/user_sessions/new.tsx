@@ -34,19 +34,15 @@ export default function UserSessionsIndex() {
 
   return (
     <Layout>
-      <Box sx={{
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-      >
-        <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
+      <Box sx={{ width: '100%', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+        </Box>
         {flash.success && (
           <Box mb={2}>
             <Alert variant="filled" severity="success">
@@ -81,7 +77,7 @@ export default function UserSessionsIndex() {
           extras={extras}
           validationErrors={validationErrors}
         >
-          <Stack spacing={2} paddingTop={1} width={400}>
+          <Stack spacing={2} paddingTop={1} sx={{ margin: '0 auto', width: '100%', maxWidth: '400px' }}>
             <TextField
               {...inputs.emailAddress}
               label="Email address"

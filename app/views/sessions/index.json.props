@@ -29,7 +29,7 @@ json.createSessionModal do
     json.newSessionForm do
       # TODO: Can't use "props_at: 'data.createSessionModal.newSessionForm'" as it breaks in the redirect scenario
       form_props(model: @session, url: sessions_path(@session, **pagination_params)) do |f|
-        f.text_field :description
+        f.text_area :description
         f.select :intent, Session.intents.map { |label, _v| [label.humanize, label] }, selected: Session.intents.first
         f.submit "Add"
       end

@@ -36,12 +36,11 @@ export default function SessionsSummary({
   return (
     <Grid
       container
-      justifyContent="center"
       spacing={2}
       gap={2}
     >
       {summary.map(item => (
-        <Grid data-testid={`ascents-summary-${item.color}`} key={item.title}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4 }} data-testid={`ascents-summary-${item.color}`} key={item.title}>
           <Card
             sx={{
               p: 2,

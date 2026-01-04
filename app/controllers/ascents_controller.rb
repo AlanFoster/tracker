@@ -43,7 +43,7 @@ class AscentsController < ApplicationController
   private
 
   def ascent_params
-    params.require(:ascent).permit(:color, :tries, :completed)
+    params.require(:ascent).permit(:color, :tries, :completed, :notes)
   end
 
   def set_session!

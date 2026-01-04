@@ -22,7 +22,7 @@ RSpec.describe "Homepage", type: :feature do
   end
 
   describe 'creating a session and ascents' do
-    it 'logs in successfully' do
+    it 'works successfully' do
       login_as(user)
 
       now "create a session" do

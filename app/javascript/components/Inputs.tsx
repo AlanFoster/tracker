@@ -45,6 +45,11 @@ import {
 } from '@mui/material';
 import React, { createContext, useContext, useMemo } from 'react';
 
+export function withoutDefaultValues<T extends { defaultValue: string; defaultChecked: string; }>(value: T): Omit<T, 'defaultValue' | 'defaultChecked'> {
+  const { defaultValue, defaultChecked, ...rest } = value;
+  return rest;
+}
+
 export const ValidationContext = createContext<ValidationErrors>({});
 
 export function useErrorMessage(errorKey?: string) {
@@ -561,13 +566,18 @@ export type TextAreaProps = React.InputHTMLAttributes<HTMLTextAreaElement>
  * Designed to work with a payload form_props's text_area helper.
  * Mimics the rails equivalent. Please modify to your liking.
  */
-export function TextArea({ type: _type, errorKey, ...rest }: TextAreaProps) {
-  const { label } = rest;
+export function TextArea({ type: _type, errorKey, label, ...rest }: TextAreaProps) {
+  const errorMessage = useErrorMessage(errorKey);
 
   return (
-    <FieldBase label={label} errorKey={errorKey} id={rest.id}>
-      <textarea {...rest} />
-    </FieldBase>
+    <MuiTextField
+      multiline
+      label={label}
+      error={!!errorMessage}
+      // slotProps={{ htmlInput: rest}}
+      helperText={errorMessage}
+      {...rest}
+    />
   );
 }
 

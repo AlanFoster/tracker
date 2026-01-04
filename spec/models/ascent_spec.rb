@@ -5,6 +5,7 @@
 #  id         :integer          not null, primary key
 #  color      :integer
 #  completed  :boolean
+#  notes      :string
 #  tries      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -29,6 +30,10 @@ RSpec.describe Ascent, type: :model do
     # subject { FactoryBot.build(:user) }
 
     it { should validate_numericality_of(:tries).is_greater_than_or_equal_to(0) }
+
+    it { should validate_length_of(:notes).is_at_least(0).is_at_most(256).allow_blank }
+    it { should allow_value('').for(:notes) }
+    it { should allow_value(nil).for(:notes) }
   end
 
   describe '#completed_if_flashed' do

@@ -1,6 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material';
 import { ascentTheme } from '@javascript/applications/main/components/ascentColors';
-import { Checkbox, FieldBase, Form, SubmitButton } from '@javascript/components/Inputs';
+import { Checkbox, FieldBase, Form, SubmitButton, TextArea, withoutDefaultValues } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import { Check } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   IconButton,
+  Stack,
   ThemeProvider,
   Typography,
 } from '@mui/material';
@@ -95,6 +96,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
   const [tries, setTries] = useState(Number(inputs.tries.defaultValue) || 0);
   const [color, setColor] = useState(inputs.color.defaultValue);
   const [completed, setCompleted] = useState(inputs.completed.defaultChecked);
+  const [notes, setNotes] = useState(inputs.notes.defaultValue);
   const formId = React.useId();
 
   const handleTriesDecrement = () => setTries(Math.max(tries - 1, 0));
@@ -106,10 +108,15 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
   const clearForm = () => {
     setTries(0);
     setCompleted(true);
+    setNotes('');
   };
 
   const handleChangeCompleted = (event: SelectChangeEvent) => {
     setCompleted(event.target.checked);
+  };
+
+  const handleChangeNotes = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNotes(event.target.value);
   };
 
   const handleChangeColor = (color: string) => {
@@ -137,65 +144,78 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
           validationErrors={validationErrors}
           {...handleSubmitWithFormClear}
         >
-          {/* Color picker */}
-          <Box sx={{ marginBottom: '1rem' }}>
-            <input
-              type="hidden"
-              id={inputs.color.id}
-              name={inputs.color.name}
-              value={color}
-            />
-            <FieldBase fullWidth {...inputs.color} label="Color" errorKey="color">
-              <ColorPickerScroller
-                color={color}
-                colors={inputs.color.options}
-                onChange={handleChangeColor}
+          <Stack spacing={1}>
+
+            {/* Color picker */}
+            <Box sx={{ marginBottom: '1rem' }}>
+              <input
+                type="hidden"
+                id={inputs.color.id}
+                name={inputs.color.name}
+                value={color}
               />
-            </FieldBase>
-          </Box>
+              <FieldBase fullWidth {...inputs.color} label="Color" errorKey="color">
+                <ColorPickerScroller
+                  color={color}
+                  colors={inputs.color.options}
+                  onChange={handleChangeColor}
+                />
+              </FieldBase>
+            </Box>
 
-          {/* Tries picker */}
-          <div>
-            <input
-              type="hidden"
-              id={inputs.tries.id}
-              name={inputs.tries.name}
-              value={tries}
-            />
-            <FieldBase fullWidth {...inputs.tries} label="Tries" errorKey="tries">
-              <Box display="flex" alignItems="center" gap={1}>
-                <IconButton
-                  onClick={handleTriesDecrement}
-                  color="primary"
-                  aria-label="Decrease"
-                  disabled={tries <= 0}
-                >
-                  <RemoveIcon />
-                </IconButton>
+            {/* Tries picker */}
+            <Box>
+              <input
+                type="hidden"
+                id={inputs.tries.id}
+                name={inputs.tries.name}
+                value={tries}
+              />
+              <FieldBase fullWidth {...inputs.tries} label="Tries" errorKey="tries">
+                <Box display="flex" alignItems="center" gap={1}>
+                  <IconButton
+                    onClick={handleTriesDecrement}
+                    color="primary"
+                    aria-label="Decrease"
+                    disabled={tries <= 0}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
 
-                <Box textAlign="center">
-                  <Typography variant="body1" minWidth="5rem">
-                    {tries === 0 ? 'flash' : tries.toString()}
-                  </Typography>
+                  <Box textAlign="center">
+                    <Typography variant="body1" minWidth="5rem">
+                      {tries === 0 ? 'flash' : tries.toString()}
+                    </Typography>
+                  </Box>
+
+                  <IconButton
+                    onClick={handleTriesIncrement}
+                    color="primary"
+                    aria-label="Increase"
+                  >
+                    <AddIcon />
+                  </IconButton>
                 </Box>
+              </FieldBase>
+            </Box>
 
-                <IconButton
-                  onClick={handleTriesIncrement}
-                  color="primary"
-                  aria-label="Increase"
-                >
-                  <AddIcon />
-                </IconButton>
+            {/* Completed? */}
+            <FieldBase {...withoutDefaultValues(inputs.completed)} label="Topped?" errorKey="completed">
+              <Box>
+                <Checkbox {...withoutDefaultValues(inputs.completed)} checked={completed} onChange={handleChangeCompleted} />
               </Box>
             </FieldBase>
-          </div>
 
-          {/* Completed? */}
-          <FieldBase {...inputs.completed} label="Topped?" errorKey="completed">
-            <Box>
-              <Checkbox {...inputs.completed} checked={completed} onChange={handleChangeCompleted} />
-            </Box>
-          </FieldBase>
+            <TextArea
+              fullWidth
+              rows={4}
+              {...withoutDefaultValues(inputs.notes)}
+              label="Notes (Optional)"
+              errorKey="notes"
+              onChange={handleChangeNotes}
+              value={notes}
+            />
+          </Stack>
         </Form>
       </Content>
 

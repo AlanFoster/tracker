@@ -30,7 +30,7 @@ export default function AscentsSummary({ ascentCounts }) {
       gap={2}
     >
       {summary.map(item => (
-        <Grid data-testid={`ascents-summary-${item.color}`} key={item.title}>
+        <Grid size={{ xs: 6, sm: 4, md: 3 }} data-testid={`ascents-summary-${item.color}`} key={item.title}>
           <Card
             sx={{
               p: 2,

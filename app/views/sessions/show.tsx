@@ -157,33 +157,33 @@ export default function SessionsShow() {
         </Box>
 
         {summaryView === 'graph'
-          &&
-            <Box data-testid='ascent-summary-graph-view'>
-            <BarChart
-              xAxis={[
-                {
-                  scaleType: 'band',
-                  data: data.map(x => x.date),
-                  valueFormatter: d =>
-                    new Date(d).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    }),
-                },
-              ]}
-              series={[...eventTypes].map(eventType =>
-                ({
-                  label: `${totals.get(eventType)} ${eventType[0].toUpperCase()}${eventType.substring(1)}`,
-                  data: data.map(x => x[eventType]),
-                  stack: 'events',
-                  color: ascentColors[eventType],
-                }),
-              )}
-              height={smallSize ? 160 : 250}
-            />
-          </Box>
-        }
-        {summaryView === 'grid' && <Box data-testid='ascent-summary-grid-view'><AscentsSummary ascentCounts={session.summary.ascentCounts} /></Box>}
+          && (
+            <Box data-testid="ascent-summary-graph-view">
+              <BarChart
+                xAxis={[
+                  {
+                    scaleType: 'band',
+                    data: data.map(x => x.date),
+                    valueFormatter: d =>
+                      new Date(d).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      }),
+                  },
+                ]}
+                series={[...eventTypes].map(eventType =>
+                  ({
+                    label: `${totals.get(eventType)} ${eventType[0].toUpperCase()}${eventType.substring(1)}`,
+                    data: data.map(x => x[eventType]),
+                    stack: 'events',
+                    color: ascentColors[eventType],
+                  }),
+                )}
+                height={smallSize ? 160 : 250}
+              />
+            </Box>
+          )}
+        {summaryView === 'grid' && <Box data-testid="ascent-summary-grid-view"><AscentsSummary ascentCounts={session.summary.ascentCounts} /></Box>}
 
         <Box
           display="flex"

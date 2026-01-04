@@ -5,6 +5,7 @@
 #  id         :integer          not null, primary key
 #  color      :integer
 #  completed  :boolean
+#  notes      :string
 #  tries      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

@@ -26,6 +26,7 @@ json.ascents do
     json.tries ascent.tries
     json.completed ascent.completed
     json.createdAt ascent.created_at
+    json.notes ascent.notes
     json.editPath ascent.id ? edit_session_ascent_path(session, ascent) : nil
   end
 end
