@@ -5,6 +5,7 @@ import { Layout } from '@javascript/applications/main/components/Layout';
 import ShareButton from '@javascript/applications/main/components/ShareButton';
 import { useAppSelector } from '@javascript/applications/main/store';
 import AddIcon from '@mui/icons-material/Add';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import {
@@ -91,13 +92,20 @@ export default function SessionsShow() {
   );
   const { visit } = useContext(NavigationContext);
 
-  const [view, setView] = React.useState('grid');
+  const [ascentsView, setAscentsView] = React.useState('grid');
+  const [summaryView, setSummaryView] = React.useState('graph');
   const theme = useTheme();
   const smallSize = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleViewChange = (event, newView) => {
+  const handleAscentsViewChange = (event, newView) => {
     if (newView !== null) {
-      setView(newView);
+      setAscentsView(newView);
+    }
+  };
+
+  const handleSummaryViewChange = (event, newView) => {
+    if (newView !== null) {
+      setSummaryView(newView);
     }
   };
 
@@ -124,29 +132,58 @@ export default function SessionsShow() {
 
         <Typography variant="h4">Overview</Typography>
 
-        <BarChart
-          xAxis={[
-            {
-              scaleType: 'band',
-              data: data.map(x => x.date),
-              valueFormatter: d =>
-                new Date(d).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          alignItems="center"
+          flexDirection={{ xs: 'column', sm: 'row' }}
+          bgcolor="background.paper"
+          mb={2}
+        >
+          <ToggleButtonGroup
+            value={summaryView}
+            size="medium"
+            exclusive
+            onChange={handleSummaryViewChange}
+            aria-label="view toggle"
+          >
+            <ToggleButton sx={{ padding: '6px 16px' }} value="graph" aria-label="ascent summary graph view">
+              <BarChartIcon />
+            </ToggleButton>
+            <ToggleButton sx={{ padding: '6px 16px' }} value="grid" aria-label="ascent summary grid view">
+              <ViewModuleIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+
+        {summaryView === 'graph'
+          &&
+            <Box data-testid='ascent-summary-graph-view'>
+            <BarChart
+              xAxis={[
+                {
+                  scaleType: 'band',
+                  data: data.map(x => x.date),
+                  valueFormatter: d =>
+                    new Date(d).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    }),
+                },
+              ]}
+              series={[...eventTypes].map(eventType =>
+                ({
+                  label: `${totals.get(eventType)} ${eventType[0].toUpperCase()}${eventType.substring(1)}`,
+                  data: data.map(x => x[eventType]),
+                  stack: 'events',
+                  color: ascentColors[eventType],
                 }),
-            },
-          ]}
-          series={[...eventTypes].map(eventType =>
-            ({
-              label: `${totals.get(eventType)} ${eventType[0].toUpperCase()}${eventType.substring(1)}`,
-              data: data.map(x => x[eventType]),
-              stack: 'events',
-              color: ascentColors[eventType],
-            }),
-          )}
-          height={smallSize ? 160 : 250}
-        />
-        <AscentsSummary ascentCounts={session.summary.ascentCounts} />
+              )}
+              height={smallSize ? 160 : 250}
+            />
+          </Box>
+        }
+        {summaryView === 'grid' && <Box data-testid='ascent-summary-grid-view'><AscentsSummary ascentCounts={session.summary.ascentCounts} /></Box>}
 
         <Box
           display="flex"
@@ -178,16 +215,16 @@ export default function SessionsShow() {
                 ascentsAsEmojis(session.ascents)}
             />
             <ToggleButtonGroup
-              value={view}
+              value={ascentsView}
               size="medium"
               exclusive
-              onChange={handleViewChange}
+              onChange={handleAscentsViewChange}
               aria-label="view toggle"
             >
-              <ToggleButton sx={{ padding: '6px 16px' }} value="list" aria-label="list view">
+              <ToggleButton sx={{ padding: '6px 16px' }} value="list" aria-label="ascent list view">
                 <ViewStreamIcon />
               </ToggleButton>
-              <ToggleButton sx={{ padding: '6px 16px' }} value="grid" aria-label="grid view">
+              <ToggleButton sx={{ padding: '6px 16px' }} value="grid" aria-label="ascent grid view">
                 <ViewModuleIcon />
               </ToggleButton>
             </ToggleButtonGroup>
@@ -196,7 +233,7 @@ export default function SessionsShow() {
 
         <Card>
           <CardContent sx={{ textAlign: 'center' }}>
-            <AscentsOverview ascents={session.ascents} view={view} />
+            <AscentsOverview ascents={session.ascents} view={ascentsView} />
           </CardContent>
         </Card>
       </Stack>

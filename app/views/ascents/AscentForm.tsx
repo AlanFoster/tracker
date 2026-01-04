@@ -1,3 +1,4 @@
+import type { SelectChangeEvent } from '@mui/material';
 import { ascentTheme } from '@javascript/applications/main/components/ascentColors';
 import { Checkbox, FieldBase, Form, SubmitButton } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
@@ -16,15 +17,20 @@ import React, { useState } from 'react';
 interface ColorPickerProps {
   colors: string[];
   color: string;
-  onChange: (value: string) => undefined;
+  selectedColorRef?: React.Ref<HTMLLIElement | null>;
+  onChange: (value: string) => void;
 }
 
-function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
+function ColorPicker({ colors, color, onChange, selectedColorRef }: ColorPickerProps) {
   return (
     <ThemeProvider theme={ascentTheme}>
       <ul style={{ paddingLeft: '9px', paddingRight: '14px', listStyle: 'none' }}>
         {colors.map(({ label, value }) => (
-          <li key={label} style={{ marginBottom: '1rem' }}>
+          <li
+            key={label}
+            style={{ marginBottom: '1rem' }}
+            ref={(label === color) ? selectedColorRef : null}
+          >
             <Button
               type="button"
               variant="contained"
@@ -42,6 +48,44 @@ function ColorPicker({ colors, color, onChange }: ColorPickerProps) {
         ))}
       </ul>
     </ThemeProvider>
+  );
+}
+
+function ColorPickerScroller({ colors, color, onChange }: ColorPickerProps) {
+  const selectedColorRef = React.useRef<HTMLLIElement | null>(null);
+
+  React.useEffect(() => {
+    selectedColorRef.current?.scrollIntoView({
+      behavior: 'auto',
+      block: 'center',
+    });
+  }, []);
+
+  return (
+    <Box
+      sx={{
+        maxHeight: '19rem',
+        overflowY: 'scroll',
+      }}
+    >
+      <ColorPicker
+        color={color}
+        selectedColorRef={selectedColorRef}
+        colors={colors}
+        onChange={onChange}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          height: '2rem',
+          background: 'linear-gradient(to bottom, transparent, rgba(57,57,57,1))',
+          pointerEvents: 'none',
+        }}
+      >
+      </Box>
+    </Box>
   );
 }
 
@@ -66,6 +110,10 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
 
   const handleChangeCompleted = (event: SelectChangeEvent) => {
     setCompleted(event.target.checked);
+  };
+
+  const handleChangeColor = (color: string) => {
+    setColor(color);
   };
 
   const handleSubmitWithFormClear = {
@@ -98,29 +146,11 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
               value={color}
             />
             <FieldBase fullWidth {...inputs.color} label="Color" errorKey="color">
-              <Box
-                sx={{
-                  maxHeight: '19rem',
-                  overflowY: 'scroll',
-                }}
-              >
-                <ColorPicker
-                  color={color}
-                  colors={inputs.color.options}
-                  onChange={color => setColor(color)}
-                />
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                    height: '2rem',
-                    background: 'linear-gradient(to bottom, transparent, rgba(57,57,57,1))',
-                    pointerEvents: 'none',
-                  }}
-                >
-                </Box>
-              </Box>
+              <ColorPickerScroller
+                color={color}
+                colors={inputs.color.options}
+                onChange={handleChangeColor}
+              />
             </FieldBase>
           </Box>
 

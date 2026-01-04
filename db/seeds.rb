@@ -303,6 +303,176 @@ ascents_data = [
       completed: false,
       created_at: 6126.278614
     }
+  ],
+  [
+    {
+      color: :orange,
+      tries: 0,
+      completed: true,
+      created_at: 209.355209
+    },
+    {
+      color: :orange,
+      tries: 0,
+      completed: true,
+      created_at: 329.314801
+    },
+    {
+      color: :orange,
+      tries: 0,
+      completed: true,
+      created_at: 402.393096
+    },
+    {
+      color: :white,
+      tries: 0,
+      completed: true,
+      created_at: 485.743173
+    },
+    {
+      color: :green,
+      tries: 0,
+      completed: true,
+      created_at: 621.6744
+    },
+    {
+      color: :green,
+      tries: 0,
+      completed: true,
+      created_at: 689.997121
+    },
+    {
+      color: :green,
+      tries: 0,
+      completed: true,
+      created_at: 833.081269
+    },
+    {
+      color: :green,
+      tries: 0,
+      completed: true,
+      created_at: 935.069128
+    },
+    {
+      color: :green,
+      tries: 0,
+      completed: true,
+      created_at: 1006.682071
+    },
+    {
+      color: :green,
+      tries: 0,
+      completed: true,
+      created_at: 1077.841214
+    },
+    {
+      color: :yellow,
+      tries: 0,
+      completed: true,
+      created_at: 1237.778232
+    },
+    {
+      color: :yellow,
+      tries: 0,
+      completed: true,
+      created_at: 1379.778583
+    },
+    {
+      color: :yellow,
+      tries: 0,
+      completed: true,
+      created_at: 1496.597851
+    },
+    {
+      color: :purple,
+      tries: 0,
+      completed: true,
+      created_at: 1621.57792
+    },
+    {
+      color: :yellow,
+      tries: 0,
+      completed: true,
+      created_at: 1856.859818
+    },
+    {
+      color: :purple,
+      tries: 2,
+      completed: true,
+      created_at: 2264.426092
+    },
+    {
+      color: :purple,
+      tries: 2,
+      completed: false,
+      created_at: 3151.445364
+    },
+    {
+      color: :purple,
+      tries: 3,
+      completed: true,
+      created_at: 3591.857246
+    },
+    {
+      color: :yellow,
+      tries: 0,
+      completed: true,
+      created_at: 3817.991031
+    },
+    {
+      color: :purple,
+      tries: 3,
+      completed: false,
+      created_at: 4155.326401
+    },
+    {
+      color: :red,
+      tries: 4,
+      completed: false,
+      created_at: 4605.117499
+    },
+    {
+      color: :red,
+      tries: 4,
+      completed: false,
+      created_at: 4940.603601
+    },
+    {
+      color: :purple,
+      tries: 0,
+      completed: true,
+      created_at: 5018.150354
+    },
+    {
+      color: :red,
+      tries: 3,
+      completed: false,
+      created_at: 5313.020255
+    },
+    {
+      color: :purple,
+      tries: 1,
+      completed: false,
+      created_at: 5918.373693
+    },
+    {
+      color: :red,
+      tries: 1,
+      completed: false,
+      created_at: 6125.339659
+    },
+    {
+      color: :red,
+      tries: 5,
+      completed: false,
+      created_at: 8887.272534
+    },
+    {
+      color: :purple,
+      tries: 3,
+      completed: false,
+      created_at: 9470.478611
+    }
   ]
 ]
 

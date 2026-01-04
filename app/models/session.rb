@@ -29,7 +29,7 @@ class Session < ApplicationRecord
     projecting: 3,
     recovery: 4,
     technique: 5,
-    power: 6
+    progression: 6
   }
 
   def title

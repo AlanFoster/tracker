@@ -65,10 +65,22 @@ RSpec.describe "Homepage", type: :feature do
           find('[aria-label="Increase"]').click
         end
         click_button 'Create'
-        expect(page).to_not have_content 'Create'
+        expect(page).to have_content 'red ascent added successfully!'
+        click_button "Cancel"
+        expect(page).to_not have_content 'red ascent added successfully!'
       end
 
-      now "verify summaries" do
+      now "verify graph view summaries" do
+        find('[aria-label="ascent summary graph view"]').click
+        within '[data-testid="ascent-summary-graph-view"]' do
+          expect(page).to have_content('1 White')
+          expect(page).to have_content('1 Purple')
+          expect(page).to have_content('3 Red')
+        end
+      end
+
+      now "verify grid view summaries" do
+        find('[aria-label="ascent summary grid view"]').click
         expect(page).to have_selector('[data-testid=ascents-summary-white]', text: '1')
         expect(page).to have_selector('[data-testid=ascents-summary-purple]', text: '1')
         expect(page).to have_selector('[data-testid=ascents-summary-red]', text: '3')
