@@ -20,7 +20,7 @@ json.summary do
 end
 
 json.ascents do
-  json.array! session.ascents do |ascent|
+  json.array! session.ascents.order(:id) do |ascent|
     json.id ascent.id
     json.color ascent.color
     json.tries ascent.tries

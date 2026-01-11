@@ -3,7 +3,7 @@ class AscentsController < ApplicationController
 
   def new
     @ascent = Ascent.new session: @session,
-                         color: @session.ascents.last&.color || Ascent.colors.values[0],
+                         color: @session.ascents.order(:id).last&.color || Ascent.colors.values[0],
                          tries: 0,
                          completed: true
     @show_ascent_modal = true
