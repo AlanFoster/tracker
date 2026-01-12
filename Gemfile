@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "kaminari"
 gem "vite_rails"
-gem "superglue", "2.0.0.alpha.8"
+gem "superglue", "2.0.0.alpha.10"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", github: "rails/rails", ref: "92481359a7f74261059a292a7cea61e68144b57e"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
