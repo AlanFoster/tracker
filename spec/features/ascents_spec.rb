@@ -85,6 +85,16 @@ RSpec.describe "Homepage", type: :feature do
         expect(page).to have_selector('[data-testid=ascents-summary-purple]', text: '1')
         expect(page).to have_selector('[data-testid=ascents-summary-red]', text: '3')
       end
+
+      now "verify dashboard" do
+        page.visit '/'
+        expect(page).to have_content 'Climbs Completed Over Time'
+        within '[data-testid="climbs-over-time-chart"]' do
+          expect(page).to have_content 'White'
+          expect(page).to have_content 'Purple'
+          expect(page).to have_content 'Red'
+        end
+      end
     end
   end
 end

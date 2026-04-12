@@ -1,3 +1,4 @@
+import ClimbsOverTimeChart from '@javascript/applications/main/components/ClimbsOverTimeChart';
 import { Layout } from '@javascript/applications/main/components/Layout';
 import SessionCard from '@javascript/applications/main/components/SessionCard';
 import { useAppSelector } from '@javascript/applications/main/store';
@@ -20,7 +21,7 @@ import SessionModalForm from './SessionModalForm';
 import SessionsSummary from './SessionsSummary';
 
 export default function SessionsIndex() {
-  const { sessions, newSessionPath, createSessionModal, sessionSummary }
+  const { sessions, newSessionPath, createSessionModal, sessionSummary, climbsOverTime }
     = useContent() as any;
   const { visit, pageKey } = useContext(NavigationContext);
   const validationErrors = useAppSelector(
@@ -83,6 +84,7 @@ export default function SessionsIndex() {
             />
           )}
         <SessionsSummary {...sessionSummary} />
+        <ClimbsOverTimeChart data={climbsOverTime} />
       </Box>
 
       <Box
