@@ -30,13 +30,9 @@ json.climbsOverTime do
     .group('ascents.color, DATE(ascents.created_at)')
     .order('ascent_date ASC')
 
-  # Build a sorted list of all dates
   all_dates = ascents_by_date.map(&:ascent_date).uniq.sort
 
-  # Build cumulative counts per color
-  color_totals = {}
   rows_by_date = {}
-
   ascents_by_date.each do |row|
     color = Ascent.colors.key(row.color) || row.color.to_s
     date = row.ascent_date.to_s
@@ -44,21 +40,27 @@ json.climbsOverTime do
     rows_by_date[date][color] = (rows_by_date[date][color] || 0) + row.count
   end
 
-  # Build cumulative series
-  result = []
-  Ascent.colors.each_key { |c| color_totals[c] = 0 }
-
-  all_dates.each do |date|
-    date_str = date.to_s
-    day_counts = rows_by_date[date_str] || {}
-    Ascent.colors.each_key { |c| color_totals[c] += day_counts[c] || 0 }
-    result << { date: date_str }.merge(color_totals.dup)
+  # Daily (non-cumulative) counts
+  json.daily do
+    json.array! all_dates do |date|
+      date_str = date.to_s
+      day_counts = rows_by_date[date_str] || {}
+      json.date date_str
+      Ascent.colors.each_key { |color| json.set! color, day_counts[color] || 0 }
+    end
   end
 
-  json.array! result do |row|
-    json.date row[:date]
-    Ascent.colors.each_key do |color|
-      json.set! color, row[color]
+  # Cumulative counts
+  json.cumulative do
+    color_totals = {}
+    Ascent.colors.each_key { |c| color_totals[c] = 0 }
+
+    json.array! all_dates do |date|
+      date_str = date.to_s
+      day_counts = rows_by_date[date_str] || {}
+      Ascent.colors.each_key { |c| color_totals[c] += day_counts[c] || 0 }
+      json.date date_str
+      Ascent.colors.each_key { |color| json.set! color, color_totals[color] }
     end
   end
 end

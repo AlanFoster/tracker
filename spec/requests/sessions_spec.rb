@@ -10,7 +10,8 @@ RSpec.describe SessionsController, type: :request do
       it "returns an empty array" do
         get sessions_path, headers: { "Accept" => "application/json" }
         json = JSON.parse(response.body)
-        expect(json["data"]["climbsOverTime"]).to eq([])
+        expect(json["data"]["climbsOverTime"]["daily"]).to eq([])
+        expect(json["data"]["climbsOverTime"]["cumulative"]).to eq([])
       end
     end
 
@@ -27,30 +28,35 @@ RSpec.describe SessionsController, type: :request do
         FactoryBot.create(:ascent, session: session2, color: :blue, completed: true, tries: 1, created_at: day2)
       end
 
-      it "returns one row per day with cumulative counts" do
+      it "returns daily counts (non-cumulative)" do
         get sessions_path, headers: { "Accept" => "application/json" }
         json = JSON.parse(response.body)
-        rows = json["data"]["climbsOverTime"]
+        rows = json["data"]["climbsOverTime"]["daily"]
 
         expect(rows.length).to eq(2)
+        expect(rows.first["red"]).to eq(2)
+        expect(rows.first["blue"]).to eq(0)
+        expect(rows.last["red"]).to eq(0)
+        expect(rows.last["blue"]).to eq(1)
+      end
 
-        first_row = rows.first
-        expect(first_row["red"]).to eq(2)
-        expect(first_row["blue"]).to eq(0)
+      it "returns cumulative counts" do
+        get sessions_path, headers: { "Accept" => "application/json" }
+        json = JSON.parse(response.body)
+        rows = json["data"]["climbsOverTime"]["cumulative"]
 
-        second_row = rows.last
-        expect(second_row["red"]).to eq(2)  # cumulative — still 2
-        expect(second_row["blue"]).to eq(1)
+        expect(rows.length).to eq(2)
+        expect(rows.first["red"]).to eq(2)
+        expect(rows.last["red"]).to eq(2)  # still 2 — cumulative
+        expect(rows.last["blue"]).to eq(1)
       end
 
       it "includes all color keys in every row" do
         get sessions_path, headers: { "Accept" => "application/json" }
         json = JSON.parse(response.body)
-        rows = json["data"]["climbsOverTime"]
-
         expected_colors = Ascent.colors.keys
-        rows.each do |row|
-          expect(row.keys).to include("date", *expected_colors)
+        json["data"]["climbsOverTime"].each_value do |rows|
+          rows.each { |row| expect(row.keys).to include("date", *expected_colors) }
         end
       end
     end

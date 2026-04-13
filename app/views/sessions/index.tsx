@@ -84,7 +84,10 @@ export default function SessionsIndex() {
             />
           )}
         <SessionsSummary {...sessionSummary} />
-        <ClimbsOverTimeChart data={climbsOverTime} />
+        <ClimbsOverTimeChart
+          daily={climbsOverTime.daily}
+          cumulative={climbsOverTime.cumulative}
+        />
       </Box>
 
       <Box

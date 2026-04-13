@@ -88,7 +88,7 @@ RSpec.describe "Homepage", type: :feature do
 
       now "verify dashboard" do
         page.visit '/'
-        expect(page).to have_content 'Climbs Completed Over Time'
+        expect(page).to have_content 'Climbs Over Time'
         within '[data-testid="climbs-over-time-chart"]' do
           expect(page).to have_content 'White'
           expect(page).to have_content 'Purple'
