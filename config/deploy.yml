@@ -17,8 +17,8 @@ end
 # Name of your application. Used to uniquely configure containers.
 service: tracker
 
-# Name of the container image (use your-user/app-name on external registries).
-image: <%= system! %q(tofu -chdir=infra/terraform/environments/production output --json app_ecr_repository_name) %>
+# Name of the container image.
+image: tracker
 
 # Deploy to these servers.
 servers:
@@ -38,19 +38,13 @@ servers:
 #
 
 proxy:
-  # ALB will terminate SSL
-  ssl: false
+  ssl: true
   host: <%= system! %q(ruby read_env_var.rb .env.production PROXY_HOST) %>
 
 # Where you keep your container images.
+# Using Kamal's built-in local registry — no remote registry or credentials needed.
 registry:
-  server: <%= system! %q(tofu -chdir=infra/terraform/environments/production output --json app_ecr_repository_url_base) %>
-  username: AWS
-  password: <%= system! %q(aws ecr get-login-password) %>
-
-  # Always use an access token rather than real password when possible.
-  # password:
-  #   - KAMAL_REGISTRY_PASSWORD
+  server: localhost:5555
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
@@ -77,8 +71,8 @@ env:
     # Use track-db for a db accessory server on same machine via local kamal docker network.
     # DB_HOST: 192.168.0.2
 
-    RAILS_ASSUME_SSL: 'false'
-    RAILS_FORCE_SSL: 'false'
+    RAILS_ASSUME_SSL: 'true'
+    RAILS_FORCE_SSL: 'true'
 
     # Log everything from Rails
     RAILS_LOG_LEVEL: debug
@@ -103,7 +97,7 @@ asset_path: /rails/public/assets
 
 # Configure the image builder.
 builder:
-  arch: arm64
+  arch: amd64
 
   <% if ENV['BUILD_WITH_HEAD'] %>
   context: .
@@ -111,12 +105,12 @@ builder:
 
 # Use a different ssh user than root
 ssh:
-  user: ec2-user
+  user: root
 
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
   db:
-    image: postgres:18.1
+    image: postgres:18.3
     host: <%= system! %q(tofu -chdir=infra/terraform/environments/production output -raw app_postgres_host) %>
     port: '127.0.0.1:5432:5432'
     env:
@@ -124,7 +118,7 @@ accessories:
         - POSTGRES_USER
         - POSTGRES_PASSWORD
     volumes:
-      - /var/lib/postgresql/data:/var/lib/postgresql/data
+      - /var/lib/postgresql:/var/lib/postgresql
 #   redis:
 #     image: valkey/valkey:8
 #     host: 192.168.0.2

@@ -16,7 +16,7 @@ services:
       - '5000:3000'
 
   database:
-    image: postgres:18.1-alpine
+    image: postgres:18.3-alpine
     ports:
       # Bind to an arbitrary port - but avoid 5432 to avoid conflict with the host already running postgres
       - '5510:5432'
