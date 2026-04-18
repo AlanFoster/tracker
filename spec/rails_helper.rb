@@ -45,7 +45,7 @@ end
 Capybara.register_driver :playwright_chromium do |app|
   Capybara::Playwright::Driver.new(app,
                                    browser_type: :chromium,
-                                   headless: false)
+                                   headless: ENV['CI'].present?)
 end
 Capybara.default_driver = :playwright_chromium
 Capybara.javascript_driver = :playwright_chromium

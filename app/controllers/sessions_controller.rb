@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
   end
 
   def show
-    @session = Current.user.sessions.find(params[:id])
+    @session = Current.user.sessions.includes(:ascents).find(params[:id])
   end
 
   def new
@@ -43,8 +43,6 @@ class SessionsController < ApplicationController
     session&.destroy
     redirect_to sessions_path, notice: "Session #{session&.title} deleted successfully!"
   end
-
-  private
 
   private
 

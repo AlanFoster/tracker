@@ -32,5 +32,14 @@ Rails.application.routes.draw do
   end
 
   resource :statistics, only: [:show]
-  resource :user
+  resource :user do
+    resources :data_exports, only: [:create, :destroy] do
+      member do
+        get :download
+      end
+      collection do
+        delete :bulk_destroy
+      end
+    end
+  end
 end

@@ -23,5 +23,8 @@ module Track
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Configure Solid Queue
+    config.solid_queue.connects_to = { database: { writing: :primary } }
   end
 end

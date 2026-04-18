@@ -1,0 +1,6 @@
+production:
+  cleanup_old_exports:
+    class: CleanupOldExportsJob
+    schedule: "0 2 * * *"  # Daily at 2 AM
+    queue: default
+    description: "Clean up old data export files daily"

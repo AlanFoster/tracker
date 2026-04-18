@@ -20,6 +20,9 @@ class User < ApplicationRecord
   has_many :user_sessions, dependent: :destroy
   has_many :connected_services, dependent: :destroy
   has_many :sessions, dependent: :destroy
+  has_many :data_exports, dependent: :destroy
+
+  generates_token_for :password_reset, expires_in: 15.minutes
 
   # Validate password presence only if no OAuth connected service exists
   validates :password,

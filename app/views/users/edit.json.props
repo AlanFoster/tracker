@@ -5,3 +5,33 @@ json.editUserForm do
     f.submit "Save changes"
   end
 end
+
+json.downloadDataForm do
+  form_props(url: user_data_exports_path, method: :post) do |f|
+    f.submit "Create Export"
+  end
+end
+
+json.bulkDeleteExportsForm do
+  json.batchDeleteName 'export_ids[]'
+  form_props(url: bulk_destroy_user_data_exports_path, method: :delete) do |f|
+  end
+end
+
+json.dataExports do
+  json.array! @user.data_exports.order(created_at: :desc) do |export|
+    json.id export.id
+    json.status export.status
+    json.file_path export.file_path && File.exist?(export.file_path) ? export.file_path : nil
+    json.error_message export.error_message
+    json.created_at export.created_at
+    json.downloadPath download_user_data_export_path(export)
+    json.deleteForm do
+      form_props(url: user_data_export_path(export), method: :delete) do |f|
+        f.submit 'remove'
+      end
+    end
+  end
+end
+
+json.dataExportsPollingUrl edit_user_url(format: :json, props_at: 'data.dataExports')

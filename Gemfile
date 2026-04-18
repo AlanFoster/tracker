@@ -60,6 +60,9 @@ group :development, :test do
   # testing framework
   gem 'rspec-rails'
   gem "shoulda-matchers"
+
+  # Catch unsafe migrations in development
+  # gem "strong_migrations"
 end
 
 group :development do

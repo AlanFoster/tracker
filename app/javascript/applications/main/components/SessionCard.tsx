@@ -2,6 +2,7 @@ import { AscentsOverview } from '@javascript/applications/main/components/Ascent
 import { Form } from '@javascript/components/Inputs';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ConfirmDelete from '@javascript/applications/main/components/ConfirmDelete'
 import {
   Card,
   CardActionArea,
@@ -18,6 +19,7 @@ export default function SessionCard({ session, view }) {
   const { form, extras } = session.deleteForm;
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [deleteSession, setDeleteSession] = React.useState(null);
   const formRef = useRef(null);
 
   const open = Boolean(anchorEl);
@@ -34,14 +36,18 @@ export default function SessionCard({ session, view }) {
 
   const handleDelete = (e) => {
     handleClose();
-    formRef.current?.submit();
     e.stopPropagation();
+    setDeleteSession(session.id)
   };
 
   return (
     <Card key={session.id} sx={{ mb: 4 }}>
-      {/* Hidden form that triggers the delete */}
-      <Form ref={formRef} {...form} extras={extras} data-sg-remote />
+      {deleteSession &&
+        <ConfirmDelete
+              deleteForm={session.deleteForm}
+              onCancel={() => setDeleteSession(null)}
+          />}
+
       <CardHeader
         title={(
           <>
