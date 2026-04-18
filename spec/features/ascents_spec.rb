@@ -47,6 +47,8 @@ RSpec.describe "Homepage", type: :feature do
         end
 
         click_button 'Cancel'
+        # Wait for modal to close
+        expect(page).to_not have_content 'New Ascent'
       end
 
       now "create invalid flash ascents" do
@@ -94,6 +96,80 @@ RSpec.describe "Homepage", type: :feature do
           expect(page).to have_content 'Purple'
           expect(page).to have_content 'Red'
         end
+      end
+    end
+  end
+
+  describe 'creating a session and tagging ascents' do
+    it 'works successfully' do
+      login_as(user)
+
+      now "create a session" do
+        click_link 'Create your first session'
+        fill_in 'session[description]', with: 'my first session'
+        click_button 'Add'
+        expect(page).to_not have_content 'Create your first session'
+      end
+
+      now "add an ascent with tags" do
+        click_link 'Add'
+        click_button 'blue'
+
+        # Wait for tags to be visible
+        expect(page).to have_content 'Ascent Type Tags'
+
+        # Select tags by clicking on the chip elements
+        find('[data-testid="ascent-tag-slab"]').click
+        find('[data-testid="ascent-tag-dyno"]').click
+
+        # Verify tags are visually selected (they should have filled style)
+        slab_chip = find('[data-testid="ascent-tag-slab"]')
+        dyno_chip = find('[data-testid="ascent-tag-dyno"]')
+        expect(slab_chip['class']).to include('MuiChip-filled')
+        expect(dyno_chip['class']).to include('MuiChip-filled')
+
+        click_button 'Create'
+        expect(page).to have_content 'blue ascent added successfully!'
+      end
+
+      now "add an ascent with multiple tags" do
+        # Modal is already open from the redirect
+        click_button 'green'
+
+        # Wait for tags to be visible
+        expect(page).to have_content 'Ascent Type Tags'
+
+        # Select multiple tags
+        find('[data-testid="ascent-tag-crimpy"]').click
+        find('[data-testid="ascent-tag-technical"]').click
+        find('[data-testid="ascent-tag-powerful"]').click
+
+        # Verify all tags are visually selected
+        expect(find('[data-testid="ascent-tag-crimpy"]')['class']).to include('MuiChip-filled')
+        expect(find('[data-testid="ascent-tag-technical"]')['class']).to include('MuiChip-filled')
+        expect(find('[data-testid="ascent-tag-powerful"]')['class']).to include('MuiChip-filled')
+
+        click_button 'Create'
+        expect(page).to have_content 'green ascent added successfully!'
+      end
+
+      now "add an ascent with different tags" do
+        # Modal is already open from the redirect
+        click_button 'yellow'
+
+        # Wait for tags to be visible
+        expect(page).to have_content 'Ascent Type Tags'
+
+        # Select initial tags
+        find('[data-testid="ascent-tag-overhang"]').click
+        find('[data-testid="ascent-tag-balance"]').click
+
+        # Verify tags are selected
+        expect(find('[data-testid="ascent-tag-overhang"]')['class']).to include('MuiChip-filled')
+        expect(find('[data-testid="ascent-tag-balance"]')['class']).to include('MuiChip-filled')
+
+        click_button 'Create'
+        expect(page).to have_content 'yellow ascent added successfully!'
       end
     end
   end

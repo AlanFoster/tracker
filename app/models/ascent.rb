@@ -6,6 +6,7 @@
 #  color      :integer
 #  completed  :boolean
 #  notes      :string
+#  tags       :text             default([])
 #  tries      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -22,6 +23,27 @@
 class Ascent < ApplicationRecord
   belongs_to :session
 
+  # Serialize tags as JSON array
+  serialize :tags, coder: JSON, type: Array
+
+  # Available ascent type tags
+  AVAILABLE_TAGS = [
+    'balance',
+    'compression',
+    'crimpy',
+    'dyno',
+    'endurance',
+    'juggy',
+    'overhang',
+    'pinches',
+    'pockets',
+    'powerful',
+    'roof',
+    'slab',
+    'sloper',
+    'technical'
+  ].freeze
+
   enum :color, {
     orange: 0,
     blue: 1,
@@ -36,12 +58,22 @@ class Ascent < ApplicationRecord
 
   validates :tries, numericality: { greater_than_or_equal_to: 0 }
   validate :completed_if_flashed
+  validate :tags_are_valid
 
   validates :notes, length: {minimum: 0, maximum: 256}, allow_blank: true
 
   def completed_if_flashed
     if tries === 0 && !completed
       errors.add(:completed, 'If the ascent was flashed, it must be marked as completed')
+    end
+  end
+
+  def tags_are_valid
+    return if tags.blank?
+
+    invalid_tags = tags - AVAILABLE_TAGS
+    if invalid_tags.any?
+      errors.add(:tags, "contains invalid tags: #{invalid_tags.join(', ')}")
     end
   end
 end

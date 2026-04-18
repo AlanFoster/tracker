@@ -6,6 +6,7 @@
 #  color      :integer
 #  completed  :boolean
 #  notes      :string
+#  tags       :text             default([])
 #  tries      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -55,6 +56,29 @@ RSpec.describe Ascent, type: :model do
     it 'is invalid when not flashed and not completed' do
       model = FactoryBot.build(:ascent, tries: 3, completed: false)
       expect(model).to be_valid
+    end
+  end
+
+  describe '#tags_are_valid' do
+    it 'is valid with valid tags' do
+      model = FactoryBot.build(:ascent, tags: ['slab', 'dyno'], tries: 1, completed: true)
+      expect(model).to be_valid
+    end
+
+    it 'is valid with empty tags' do
+      model = FactoryBot.build(:ascent, tags: [], tries: 1, completed: true)
+      expect(model).to be_valid
+    end
+
+    it 'is invalid with invalid tags' do
+      model = FactoryBot.build(:ascent, tags: ['invalid_tag'], tries: 1, completed: true)
+      expect(model).to_not be_valid
+      expect(model.errors[:tags]).to include('contains invalid tags: invalid_tag')
+    end
+
+    it 'is invalid with mix of valid and invalid tags' do
+      model = FactoryBot.build(:ascent, tags: ['slab', 'invalid_tag'], tries: 1, completed: true)
+      expect(model).to_not be_valid
     end
   end
 end

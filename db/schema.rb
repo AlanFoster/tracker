@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_01_04_004615) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_18_203448) do
   create_table "ascents", force: :cascade do |t|
     t.integer "color"
     t.boolean "completed"
     t.datetime "created_at", null: false
     t.string "notes"
     t.integer "session_id", null: false
+    t.text "tags", default: "[]"
     t.integer "tries"
     t.datetime "updated_at", null: false
     t.index ["session_id"], name: "index_ascents_on_session_id"

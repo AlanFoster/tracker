@@ -6,6 +6,7 @@
 #  color      :integer
 #  completed  :boolean
 #  notes      :string
+#  tags       :text             default([])
 #  tries      :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -22,5 +23,9 @@
 FactoryBot.define do
   factory :ascent do
     session
+    color { :orange }
+    tries { 1 }
+    completed { true }
+    tags { [] }
   end
 end

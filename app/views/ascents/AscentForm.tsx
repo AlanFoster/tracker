@@ -12,6 +12,7 @@ import {
   Stack,
   ThemeProvider,
   Typography,
+  Chip,
 } from '@mui/material';
 import React, { useState } from 'react';
 
@@ -97,6 +98,14 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
   const [color, setColor] = useState(inputs.color.defaultValue);
   const [completed, setCompleted] = useState(inputs.completed.defaultChecked);
   const [notes, setNotes] = useState(inputs.notes.defaultValue);
+
+  const tagCollection = inputs.tags?.collection || [];
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    tagCollection
+      .filter((tag: any) => tag.defaultChecked)
+      .map((tag: any) => tag.value)
+  );
+
   const formId = React.useId();
 
   const handleTriesDecrement = () => setTries(Math.max(tries - 1, 0));
@@ -109,6 +118,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
     setTries(0);
     setCompleted(true);
     setNotes('');
+    setSelectedTags([]);
   };
 
   const handleChangeCompleted = (event: SelectChangeEvent) => {
@@ -121,6 +131,14 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
 
   const handleChangeColor = (color: string) => {
     setColor(color);
+  };
+
+  const handleToggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag)
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
   };
 
   const handleSubmitWithFormClear = {
@@ -205,6 +223,32 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
                 <Checkbox {...withoutDefaultValues(inputs.completed)} checked={completed} onChange={handleChangeCompleted} />
               </Box>
             </FieldBase>
+
+            {tagCollection.length > 0 && (
+              <FieldBase label="Ascent Type Tags (Optional)" errorKey="tags">
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+                  {tagCollection.map((tag: any) => (
+                    <React.Fragment key={tag.value}>
+                      {selectedTags.includes(tag.value) && (
+                        <input
+                          type="hidden"
+                          name={tag.name}
+                          value={tag.value}
+                        />
+                      )}
+                      <Chip
+                        label={tag.label}
+                        onClick={() => handleToggleTag(tag.value)}
+                        color={selectedTags.includes(tag.value) ? 'primary' : 'default'}
+                        variant={selectedTags.includes(tag.value) ? 'filled' : 'outlined'}
+                        sx={{ cursor: 'pointer' }}
+                        data-testid={`ascent-tag-${tag.value}`}
+                      />
+                    </React.Fragment>
+                  ))}
+                </Box>
+              </FieldBase>
+            )}
 
             <TextArea
               fullWidth
