@@ -5,6 +5,7 @@ import {
   Box,
   Container,
   createTheme,
+  IconButton,
   Link,
   Menu,
   MenuItem,
@@ -13,9 +14,11 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useContent } from '@thoughtbot/superglue';
+import { formatDistanceToNowStrict } from 'date-fns';
 import React from 'react';
 import UserAvatar from './UserAvatar';
 
@@ -128,32 +131,122 @@ function UserProfileMenu({ currentUser, profilePath }) {
 }
 
 export function Flash({ flash }) {
+  const [, setTick] = React.useState(0);
+  const [visibleAlerts, setVisibleAlerts] = React.useState({
+    success: true,
+    notice: true,
+    alert: true,
+    error: true,
+  });
+
+  // Reset visibility when flash content changes
+  React.useEffect(() => {
+    setVisibleAlerts({
+      success: true,
+      notice: true,
+      alert: true,
+      error: true,
+    });
+  }, [flash.notice, flash.success, flash.alert, flash.error, flash.createdAt]);
+
+  // Update timer every second
+  React.useEffect(() => {
+    if (!flash.createdAt) return;
+
+    const interval = setInterval(() => {
+      setTick(prev => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [flash.createdAt]);
+
+  const handleClose = (alertType: string) => {
+    setVisibleAlerts(prev => ({ ...prev, [alertType]: false }));
+  };
+
+  const timeAgo = flash.createdAt
+    ? formatDistanceToNowStrict(new Date(flash.createdAt * 1000), { addSuffix: true })
+    : '';
+
   return (
     <>
-      {flash.success && (
+      {flash.success && visibleAlerts.success && (
         <Box mb={2}>
-          <Alert variant="filled" severity="success">
+          <Alert
+            variant="filled"
+            severity="success"
+            action={
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={() => handleClose('success')}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
             {flash.success}
           </Alert>
         </Box>
       )}
-      {flash.notice && (
+      {flash.notice && visibleAlerts.notice && (
         <Box mb={2}>
-          <Alert variant="filled" severity="info">
+          <Alert
+            variant="filled"
+            severity="info"
+            action={
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={() => handleClose('notice')}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
             {flash.notice}
+            {flash.createdAt && (
+              <Typography variant="caption" sx={{ ml: 1, opacity: 0.8 }}>
+                ({timeAgo})
+              </Typography>
+            )}
           </Alert>
         </Box>
       )}
-      {flash.alert && (
+      {flash.alert && visibleAlerts.alert && (
         <Box mb={2}>
-          <Alert variant="filled" severity="info">
+          <Alert
+            variant="filled"
+            severity="info"
+            action={
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={() => handleClose('alert')}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
             {flash.alert}
           </Alert>
         </Box>
       )}
-      {flash.error && (
+      {flash.error && visibleAlerts.error && (
         <Box mb={2}>
-          <Alert variant="filled" severity="error">
+          <Alert
+            variant="filled"
+            severity="error"
+            action={
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={() => handleClose('error')}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            }
+          >
             {flash.error}
           </Alert>
         </Box>
