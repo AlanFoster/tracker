@@ -1,0 +1,165 @@
+json.climbsOverTime do
+  # Database-agnostic approach: fetch data and group in Ruby
+  ascents = Current.user.sessions.joins(:ascents)
+    .select('ascents.color, ascents.created_at')
+
+  rows_by_date = {}
+  ascents.each do |ascent|
+    date = ascent.created_at.to_date.to_s
+    color = Ascent.colors.key(ascent.color) || ascent.color.to_s
+
+    rows_by_date[date] ||= {}
+    rows_by_date[date][color] = (rows_by_date[date][color] || 0) + 1
+  end
+
+  all_dates = rows_by_date.keys.sort
+
+  json.daily do
+    json.array! all_dates do |date|
+      day_counts = rows_by_date[date] || {}
+      json.date date
+      Ascent.colors.each_key { |color| json.set! color, day_counts[color] || 0 }
+    end
+  end
+
+  json.cumulative do
+    color_totals = {}
+    Ascent.colors.each_key { |c| color_totals[c] = 0 }
+
+    json.array! all_dates do |date|
+      day_counts = rows_by_date[date] || {}
+      Ascent.colors.each_key { |c| color_totals[c] += day_counts[c] || 0 }
+      json.date date
+      Ascent.colors.each_key { |color| json.set! color, color_totals[color] }
+    end
+  end
+end
+
+json.toppedRate do
+  totals = Current.user.sessions.joins(:ascents)
+    .select('ascents.color, COUNT(*) as total, SUM(CASE WHEN ascents.completed THEN 1 ELSE 0 END) as topped')
+    .group('ascents.color')
+
+  json.array! totals do |row|
+    color = Ascent.colors.key(row.color) || row.color.to_s
+    json.color color
+    json.total row.total
+    json.topped row.topped
+    json.rate row.total > 0 ? (row.topped.to_f / row.total * 100).round(1) : 0
+  end
+end
+
+json.avgTries do
+  totals = Current.user.sessions.joins(:ascents)
+    .select('ascents.color, COUNT(*) as total, AVG(ascents.tries) as avg_tries')
+    .group('ascents.color')
+
+  json.array! totals do |row|
+    color = Ascent.colors.key(row.color) || row.color.to_s
+    json.color color
+    json.total row.total
+    json.avgTries row.avg_tries.to_f.round(2)
+  end
+end
+
+json.flashRate do
+  totals = Current.user.sessions.joins(:ascents)
+    .select('ascents.color, COUNT(*) as total, SUM(CASE WHEN ascents.tries = 0 AND ascents.completed THEN 1 ELSE 0 END) as flashed')
+    .group('ascents.color')
+
+  json.array! totals do |row|
+    color = Ascent.colors.key(row.color) || row.color.to_s
+    json.color color
+    json.total row.total
+    json.flashed row.flashed
+    json.rate row.total > 0 ? (row.flashed.to_f / row.total * 100).round(1) : 0
+  end
+end
+
+json.ascentsPerSession do
+  # Database-agnostic approach: fetch data and group in Ruby
+  ascents = Current.user.sessions
+    .joins(:ascents)
+    .select('sessions.id, sessions.created_at, ascents.color, ascents.completed')
+    .order('sessions.created_at ASC')
+
+  by_session = {}
+  ascents.each do |ascent|
+    session_id = ascent.id
+    session_date = ascent.created_at.to_date.to_s
+    color = Ascent.colors.key(ascent.color) || ascent.color.to_s
+    key = ascent.completed ? "#{color}_topped" : "#{color}_not_topped"
+
+    by_session[session_id] ||= { date: session_date }
+    by_session[session_id][key] = (by_session[session_id][key] || 0) + 1
+  end
+
+  json.array! by_session.values do |session|
+    json.date session[:date]
+    Ascent.colors.each_key do |color|
+      json.set! "#{color}_topped", session["#{color}_topped"] || 0
+      json.set! "#{color}_not_topped", session["#{color}_not_topped"] || 0
+    end
+  end
+end
+
+json.sessionsByIntent do
+  totals = Current.user.sessions.group(:intent).count
+
+  json.array! totals.map { |intent, count| { intent: intent.to_s, count: count } } do |row|
+    json.intent row[:intent]
+    json.count row[:count]
+  end
+end
+
+
+json.toppedRateOverTime do
+  # Database-agnostic approach: fetch data and group in Ruby
+  ascents = Current.user.sessions.joins(:ascents)
+    .select('ascents.color, ascents.created_at, ascents.completed')
+
+  by_month = {}
+  ascents.each do |ascent|
+    month = ascent.created_at.strftime('%Y-%m')
+    color = Ascent.colors.key(ascent.color) || ascent.color.to_s
+
+    by_month[month] ||= {}
+    by_month[month][color] ||= { total: 0, topped: 0 }
+    by_month[month][color][:total] += 1
+    by_month[month][color][:topped] += 1 if ascent.completed
+  end
+
+  all_months = by_month.keys.sort
+  active_colors = by_month.values.flat_map(&:keys).uniq
+
+  json.months all_months
+  json.series do
+    json.array! active_colors do |color|
+      json.color color
+      json.data do
+        json.array! all_months do |month|
+          entry = by_month[month][color]
+          rate = entry && entry[:total] > 0 ? (entry[:topped].to_f / entry[:total] * 100).round(1) : nil
+          json.month month
+          json.rate rate
+        end
+      end
+    end
+  end
+end
+
+json.sessionsByDayOfWeek do
+  days = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
+
+  # Database-agnostic approach: fetch data and group in Ruby
+  counts_by_day = {}
+  Current.user.sessions.pluck(:created_at).each do |created_at|
+    day_name = created_at.strftime('%A')
+    counts_by_day[day_name] = (counts_by_day[day_name] || 0) + 1
+  end
+
+  json.array! days do |day|
+    json.day day
+    json.count counts_by_day[day] || 0
+  end
+end

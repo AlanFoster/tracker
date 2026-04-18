@@ -31,5 +31,6 @@ Rails.application.routes.draw do
     resources :ascents, only: [:new, :edit, :create, :update]
   end
 
+  resource :statistics, only: [:show]
   resource :user
 end

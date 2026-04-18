@@ -23,47 +23,7 @@ json.sessionSummary do
   json.averageAscents session_count == 0 ? 0 : (ascent_count / session_count).round(2)
 end
 
-json.climbsOverTime do
-  ascents_by_date = Current.user.sessions
-    .joins(:ascents)
-    .select('ascents.color, DATE(ascents.created_at) as ascent_date, COUNT(*) as count')
-    .group('ascents.color, DATE(ascents.created_at)')
-    .order('ascent_date ASC')
-
-  all_dates = ascents_by_date.map(&:ascent_date).uniq.sort
-
-  rows_by_date = {}
-  ascents_by_date.each do |row|
-    color = Ascent.colors.key(row.color) || row.color.to_s
-    date = row.ascent_date.to_s
-    rows_by_date[date] ||= {}
-    rows_by_date[date][color] = (rows_by_date[date][color] || 0) + row.count
-  end
-
-  # Daily (non-cumulative) counts
-  json.daily do
-    json.array! all_dates do |date|
-      date_str = date.to_s
-      day_counts = rows_by_date[date_str] || {}
-      json.date date_str
-      Ascent.colors.each_key { |color| json.set! color, day_counts[color] || 0 }
-    end
-  end
-
-  # Cumulative counts
-  json.cumulative do
-    color_totals = {}
-    Ascent.colors.each_key { |c| color_totals[c] = 0 }
-
-    json.array! all_dates do |date|
-      date_str = date.to_s
-      day_counts = rows_by_date[date_str] || {}
-      Ascent.colors.each_key { |c| color_totals[c] += day_counts[c] || 0 }
-      json.date date_str
-      Ascent.colors.each_key { |color| json.set! color, color_totals[color] }
-    end
-  end
-end
+json.statisticsPath statistics_path
 
 pagination_params = { page: params[:page], per_page: params[:per_page] }.compact.transform_values(&:to_i)
 json.createSessionModal do
@@ -82,3 +42,77 @@ json.createSessionModal do
 end
 
 json.newSessionPath new_session_path(**pagination_params, props_at: 'data.createSessionModal')
+
+json.weeklyActivity do
+  first_session = Current.user.sessions.order(:created_at).first
+
+  if first_session
+    today = Date.today
+    start_of_current_week = today.beginning_of_week(:monday)
+    first_week_start = first_session.created_at.to_date.beginning_of_week(:monday)
+
+    num_weeks = ((start_of_current_week - first_week_start) / 7).to_i + 1
+    weeks = num_weeks.times.map do |i|
+      week_start = first_week_start + i.weeks
+      { start: week_start, end: week_start.end_of_week(:monday) }
+    end
+
+    session_weeks = Current.user.sessions
+      .pluck(:created_at)
+      .map { |t| t.to_date.beginning_of_week(:monday) }
+      .to_set
+
+    # Group sessions by week start (Monday) - database agnostic approach
+    session_counts = {}
+    Current.user.sessions.pluck(:created_at).each do |created_at|
+      week_start = created_at.to_date.beginning_of_week(:monday)
+      session_counts[week_start] = (session_counts[week_start] || 0) + 1
+    end
+
+    json.array! weeks do |week|
+      json.weekStart week[:start].iso8601
+      json.hasSession session_weeks.include?(week[:start])
+      json.sessionCount session_counts[week[:start]] || 0
+    end
+  else
+    json.array! []
+  end
+end
+
+json.climbsOverTime do
+  # Database-agnostic approach: fetch data and group in Ruby
+  ascents = Current.user.sessions.joins(:ascents)
+    .select('ascents.color, ascents.created_at')
+    .where(ascents: { completed: true })
+
+  rows_by_date = {}
+  ascents.each do |ascent|
+    date = ascent.created_at.to_date.to_s
+    color = Ascent.colors.key(ascent.color) || ascent.color.to_s
+
+    rows_by_date[date] ||= {}
+    rows_by_date[date][color] = (rows_by_date[date][color] || 0) + 1
+  end
+
+  all_dates = rows_by_date.keys.sort
+
+  json.daily do
+    json.array! all_dates do |date|
+      day_counts = rows_by_date[date] || {}
+      json.date date
+      Ascent.colors.each_key { |color| json.set! color, day_counts[color] || 0 }
+    end
+  end
+
+  json.cumulative do
+    color_totals = {}
+    Ascent.colors.each_key { |c| color_totals[c] = 0 }
+
+    json.array! all_dates do |date|
+      day_counts = rows_by_date[date] || {}
+      Ascent.colors.each_key { |c| color_totals[c] += day_counts[c] || 0 }
+      json.date date
+      Ascent.colors.each_key { |color| json.set! color, color_totals[color] }
+    end
+  end
+end

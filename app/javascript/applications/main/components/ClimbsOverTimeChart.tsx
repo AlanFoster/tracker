@@ -63,21 +63,29 @@ function useActiveColors(data: DataPoint[]) {
     .filter(color => data.some(row => (row[color] as number) > 0));
 }
 
-function Chart({ data, yLabel, highlightedItem, onHighlightChange }: {
+function Chart({ data, yLabel, highlightedItem, onHighlightChange, isCumulative = false }: {
   data: DataPoint[];
   yLabel: string;
   highlightedItem: HighlightItemData | null;
   onHighlightChange: (item: HighlightItemData | null) => void;
+  isCumulative?: boolean;
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const activeColors = useActiveColors(data);
-  const xAxisData = data.map(row => parseISO(row.date));
+
+  // For cumulative charts, prepend a starting point at 0
+  const chartData = isCumulative && data.length > 0 ? [
+    { date: data[0].date, ...Object.fromEntries(activeColors.map(c => [c, 0])) },
+    ...data
+  ] : data;
+
+  const xAxisData = chartData.map(row => parseISO(row.date));
 
   const series = activeColors.map(color => ({
     id: color,
     label: color.charAt(0).toUpperCase() + color.slice(1),
-    data: data.map(row => row[color] as number),
+    data: chartData.map(row => row[color] as number),
     color: ascentColors[color as keyof typeof ascentColors],
     showMark: false,
     curve: 'linear' as const,
@@ -86,11 +94,17 @@ function Chart({ data, yLabel, highlightedItem, onHighlightChange }: {
 
   return (
     <LineChart
-      xAxis={[{ data: xAxisData, scaleType: 'time', valueFormatter: (v: Date) => format(v, 'MMM d, yyyy') }]}
-      yAxis={[{ label: isMobile ? '' : yLabel, width: isMobile ? 30 : 60 }]}
+      xAxis={[{
+        data: xAxisData,
+        scaleType: 'time',
+        valueFormatter: (v: Date) => format(v, 'MMM d, yyyy'),
+        min: xAxisData[0]?.getTime(),
+        max: xAxisData[xAxisData.length - 1]?.getTime()
+      }]}
+      yAxis={[{ label: isMobile ? '' : yLabel, width: isMobile ? 30 : 60, min: 0 }]}
       series={series}
       height={280}
-      margin={{ left: 0, right: 20, top: 10, bottom: 40 }}
+      margin={{ left: isMobile ? 10 : 0, right: 20, top: 10, bottom: 40 }}
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       hideLegend
@@ -120,10 +134,10 @@ function StackedBarChart({ data, highlightedItem, onHighlightChange }: {
   return (
     <BarChart
       xAxis={[{ scaleType: 'band', data: xAxisData }]}
-      yAxis={[{ label: isMobile ? '' : 'Climbs', width: isMobile ? 30 : 60 }]}
+      yAxis={[{ label: isMobile ? '' : 'Climbs', width: isMobile ? 30 : 60, min: 0 }]}
       series={series}
       height={280}
-      margin={{ left: 0, right: 20, top: 10, bottom: 40 }}
+      margin={{ left: isMobile ? 10 : 0, right: 20, top: 10, bottom: 40 }}
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       hideLegend
@@ -191,6 +205,7 @@ export default function ClimbsOverTimeChart({ daily, cumulative }: Props) {
             yLabel="Cumulative Climbs"
             highlightedItem={highlightedItem}
             onHighlightChange={setHighlightedItem}
+            isCumulative={true}
           />
         )}
         {mode === 'daily' && daily.length > 0 && (
@@ -199,6 +214,7 @@ export default function ClimbsOverTimeChart({ daily, cumulative }: Props) {
             yLabel="Climbs"
             highlightedItem={highlightedItem}
             onHighlightChange={setHighlightedItem}
+            isCumulative={false}
           />
         )}
         {mode === 'stacked' && daily.length > 0 && (

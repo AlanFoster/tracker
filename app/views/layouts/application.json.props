@@ -14,6 +14,8 @@ json.data(dig: path) do
       end
     end
     json.profilePath edit_user_url
+    json.statisticsPath statistics_path
+    json.sessionsPath sessions_path
   end
 
   yield json

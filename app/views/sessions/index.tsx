@@ -1,6 +1,6 @@
-import ClimbsOverTimeChart from '@javascript/applications/main/components/ClimbsOverTimeChart';
 import { Layout } from '@javascript/applications/main/components/Layout';
 import SessionCard from '@javascript/applications/main/components/SessionCard';
+import WeeklyActivityRow from '@javascript/applications/main/components/WeeklyActivityRow';
 import { useAppSelector } from '@javascript/applications/main/store';
 import AddIcon from '@mui/icons-material/Add';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
@@ -21,7 +21,7 @@ import SessionModalForm from './SessionModalForm';
 import SessionsSummary from './SessionsSummary';
 
 export default function SessionsIndex() {
-  const { sessions, newSessionPath, createSessionModal, sessionSummary, climbsOverTime }
+  const { sessions, newSessionPath, createSessionModal, sessionSummary, weeklyActivity }
     = useContent() as any;
   const { visit, pageKey } = useContext(NavigationContext);
   const validationErrors = useAppSelector(
@@ -83,11 +83,8 @@ export default function SessionsIndex() {
               }}
             />
           )}
+        <WeeklyActivityRow weeklyActivity={weeklyActivity} />
         <SessionsSummary {...sessionSummary} />
-        <ClimbsOverTimeChart
-          daily={climbsOverTime.daily}
-          cumulative={climbsOverTime.cumulative}
-        />
       </Box>
 
       <Box

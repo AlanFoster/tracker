@@ -164,7 +164,7 @@ export function Flash({ flash }) {
 
 export function Layout({ children }: React.PropsWithChildren) {
   const flash = useAppSelector(state => state.flash);
-  const { currentUser, profilePath } = useContent();
+  const { currentUser, profilePath, statisticsPath, sessionsPath } = useContent();
 
   return (
     <ErrorBoundary fallback={<p>Something went wrong</p>}>
@@ -176,21 +176,39 @@ export function Layout({ children }: React.PropsWithChildren) {
               component="div"
               sx={{ flexGrow: 1, display: { sm: 'block' } }}
             >
-              <Link
-                href="/"
-                data-sg-visit
-                color="inherit"
-                underline="none"
-                sx={{
-                  '&:hover': { textDecoration: 'underline' },
-                }}
-              >
-                <Typography
-                  variant="h6"
+              <Box display="flex" alignItems="center" gap={3}>
+                <Link
+                  href="/"
+                  data-sg-visit
+                  color="inherit"
+                  underline="none"
+                  sx={{ '&:hover': { textDecoration: 'underline' } }}
                 >
-                  Tracker
-                </Typography>
-              </Link>
+                  <Typography variant="h6">Tracker</Typography>
+                </Link>
+                {currentUser && (
+                  <>
+                    <Link
+                      href={sessionsPath}
+                      data-sg-visit
+                      color="inherit"
+                      underline="none"
+                      sx={{ '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      <Typography variant="body1">Sessions</Typography>
+                    </Link>
+                    <Link
+                      href={statisticsPath}
+                      data-sg-visit
+                      color="inherit"
+                      underline="none"
+                      sx={{ '&:hover': { textDecoration: 'underline' } }}
+                    >
+                      <Typography variant="body1">Statistics</Typography>
+                    </Link>
+                  </>
+                )}
+              </Box>
             </Box>
             {currentUser && <UserProfileMenu currentUser={currentUser} profilePath={profilePath} />}
           </Toolbar>
