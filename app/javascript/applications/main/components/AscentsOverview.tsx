@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Chip,
   Divider,
   List,
   ListItem,
@@ -99,6 +100,18 @@ export function AscentListItems({ ascents, renderLink = true }) {
                         {differenceInMinutes(new Date(), createdAt) < 60 ? formatDistanceToNow(createdAt, { addSuffix: true }) : format(createdAt, 'yyyy/MM/dd - H:m:s')}
                       </span>
                     </Tooltip>
+                    {ascent.tags && ascent.tags.length > 0 && (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
+                        {ascent.tags.map((tag: string) => (
+                          <Chip
+                            key={tag}
+                            label={tag.charAt(0).toUpperCase() + tag.slice(1)}
+                            size="small"
+                            variant="outlined"
+                          />
+                        ))}
+                      </Box>
+                    )}
                   </React.Fragment>
                 )}
               />

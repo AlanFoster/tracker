@@ -132,7 +132,21 @@ RSpec.describe "Homepage", type: :feature do
         expect(page).to have_content 'blue ascent added successfully!'
       end
 
+      now "verify tags appear in list view" do
+        # Close the modal by clicking Cancel
+        click_button 'Cancel'
+
+        # Switch to list view
+        find('[aria-label="ascent list view"]').click
+
+        # Verify tags are displayed in the list
+        expect(page).to have_content 'Slab'
+        expect(page).to have_content 'Dyno'
+      end
+
       now "add an ascent with multiple tags" do
+        # Open the modal again
+        click_link 'Add'
         # Modal is already open from the redirect
         click_button 'green'
 
@@ -153,7 +167,22 @@ RSpec.describe "Homepage", type: :feature do
         expect(page).to have_content 'green ascent added successfully!'
       end
 
+      now "verify multiple tags appear in list view" do
+        # Close the modal by clicking Cancel
+        click_button 'Cancel'
+
+        # Switch to list view
+        find('[aria-label="ascent list view"]').click
+
+        # Verify all tags are displayed in the list
+        expect(page).to have_content 'Crimpy'
+        expect(page).to have_content 'Technical'
+        expect(page).to have_content 'Powerful'
+      end
+
       now "add an ascent with different tags" do
+        # Open the modal again
+        click_link 'Add'
         # Modal is already open from the redirect
         click_button 'yellow'
 
