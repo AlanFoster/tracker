@@ -1,5 +1,5 @@
 import { ascentTheme } from '@javascript/applications/main/components/ascentColors';
-import { Checkbox, FieldBase, Form, SubmitButton, TextArea, withoutDefaultValues } from '@javascript/components/Inputs';
+import { FieldBase, Form, SubmitButton, TextArea, withoutDefaultValues } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
 import { Check } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
@@ -276,7 +276,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
               </FieldBase>
             </Box>
 
-            {/* Tries picker */}
+            {/* Tries Section */}
             <Box>
               <input
                 type="hidden"
@@ -285,43 +285,152 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
                 value={tries}
               />
               <FieldBase fullWidth {...inputs.tries} label="Tries" errorKey="tries">
-                <Box display="flex" alignItems="center" gap={1}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    p: 2,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                  }}
+                >
                   <IconButton
                     onClick={handleTriesDecrement}
-                    color="primary"
-                    aria-label="Decrease"
                     disabled={tries <= 0}
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      border: '1px solid',
+                      borderColor: tries <= 0 ? 'action.disabled' : 'primary.main',
+                      color: tries <= 0 ? 'action.disabled' : 'primary.main',
+                      '&:hover': {
+                        backgroundColor: tries <= 0 ? 'transparent' : 'primary.main',
+                        color: tries <= 0 ? 'action.disabled' : 'primary.contrastText',
+                      },
+                      '&:disabled': {
+                        borderColor: 'action.disabled',
+                        color: 'action.disabled',
+                      },
+                      transition: 'all 0.15s ease',
+                    }}
                   >
-                    <RemoveIcon />
+                    <RemoveIcon fontSize="small" />
                   </IconButton>
 
-                  <Box textAlign="center">
-                    <Typography variant="body1" minWidth="5rem">
-                      {tries === 0 ? 'flash' : tries.toString()}
+                  <Box sx={{ textAlign: 'center', flex: 1, mx: 2 }}>
+                    <Typography
+                      variant="h4"
+                      sx={{
+                        fontWeight: 700,
+                        color: tries === 0 ? 'success.main' : 'text.primary',
+                        mb: 0.5,
+                      }}
+                    >
+                      {tries === 0 ? '⚡' : tries}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: 'text.secondary',
+                        textTransform: 'uppercase',
+                        letterSpacing: 1,
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {tries === 0 ? 'Flash' : tries === 1 ? 'Try' : 'Tries'}
                     </Typography>
                   </Box>
 
                   <IconButton
                     onClick={handleTriesIncrement}
-                    color="primary"
-                    aria-label="Increase"
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      backgroundColor: 'primary.main',
+                      border: '1px solid',
+                      borderColor: 'primary.main',
+                      color: 'primary.contrastText',
+                      '&:hover': {
+                        backgroundColor: 'primary.dark',
+                        borderColor: 'primary.dark',
+                      },
+                      transition: 'all 0.15s ease',
+                    }}
                   >
-                    <AddIcon />
+                    <AddIcon fontSize="small" />
                   </IconButton>
                 </Box>
               </FieldBase>
             </Box>
 
-            {/* Completed? */}
-            <FieldBase {...withoutDefaultValues(inputs.completed)} label="Topped?" errorKey="completed">
-              <Box>
-                <Checkbox
-                  {...withoutDefaultValues(inputs.completed)}
-                  checked={completed}
-                  onChange={(event) => setCompleted(event.target.checked)}
-                />
-              </Box>
-            </FieldBase>
+            {/* Topped Section */}
+            <Box>
+              <FieldBase fullWidth {...withoutDefaultValues(inputs.completed)} label="Topped?" errorKey="completed">
+                <Box
+                  onClick={() => setCompleted(!completed)}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    p: 2,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: completed ? 'success.main' : 'divider',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      borderColor: completed ? 'success.dark' : 'primary.main',
+                      backgroundColor: 'action.hover',
+                    }
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: '50%',
+                      backgroundColor: completed ? 'success.main' : 'transparent',
+                      border: '2px solid',
+                      borderColor: completed ? 'success.main' : 'text.secondary',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mr: 2,
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {completed && (
+                      <Check
+                        sx={{
+                          color: 'success.contrastText',
+                          fontSize: 14,
+                          fontWeight: 'bold'
+                        }}
+                      />
+                    )}
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: completed ? 600 : 400,
+                        color: completed ? 'success.main' : 'text.primary',
+                      }}
+                    >
+                      {completed ? 'Topped!' : 'Not topped'}
+                    </Typography>
+                  </Box>
+                  <input
+                    type="hidden"
+                    name={inputs.completed.name}
+                    value={completed ? inputs.completed.value : inputs.completed.uncheckedValue}
+                  />
+                </Box>
+              </FieldBase>
+            </Box>
 
             {tagCollection.length > 0 && (
               <FieldBase label="Ascent Type Tags (Optional)" errorKey="tags">
@@ -351,11 +460,11 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
 
             <TextArea
               rows={4}
-              {...withoutDefaultValues(inputs.notes)}
+              {...inputs.notes}
               label="Notes (Optional)"
               errorKey="notes"
-              onChange={handleChangeNotes}
               value={notes}
+              onChange={handleChangeNotes}
             />
           </Stack>
         </Form>
