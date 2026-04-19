@@ -1,4 +1,3 @@
-import type { SelectChangeEvent } from '@mui/material';
 import { ascentTheme } from '@javascript/applications/main/components/ascentColors';
 import { Checkbox, FieldBase, Form, SubmitButton, TextArea, withoutDefaultValues } from '@javascript/components/Inputs';
 import useVisitFormSubmit from '@javascript/components/useVisitFormSubmit';
@@ -17,57 +16,166 @@ import {
 import React, { useState } from 'react';
 
 interface ColorPickerProps {
-  colors: string[];
+  colors: Array<{ label: string; value: string }>;
   color: string;
-  selectedColorRef?: React.Ref<HTMLLIElement | null>;
+  selectedColorRef?: React.Ref<HTMLDivElement | null>;
   onChange: (value: string) => void;
 }
 
 function ColorPicker({ colors, color, onChange, selectedColorRef }: ColorPickerProps) {
   return (
     <ThemeProvider theme={ascentTheme}>
-      <ul style={{ paddingLeft: '9px', paddingRight: '14px', listStyle: 'none' }}>
-        {colors.map(({ label, value }) => (
-          <li
-            key={label}
-            style={{ marginBottom: '1rem' }}
-            ref={(label === color) ? selectedColorRef : null}
-          >
-            <Button
-              type="button"
-              variant="contained"
-              color={label}
-              style={{
-                width: '100%',
-              }}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'repeat(4, 1fr)', // 4 columns on mobile
+            sm: 'repeat(5, 1fr)', // 5 columns on small tablets
+            md: 'repeat(6, 1fr)', // 6 columns on larger screens
+          },
+          gap: { xs: 1.5, sm: 1, md: 0.75 },
+          padding: { xs: 1.5, sm: 2 },
+          justifyItems: 'center',
+        }}
+      >
+        {colors.map(({ label, value }) => {
+          const isSelected = label === color;
+          const colorValue = (ascentTheme.palette as any)[label]?.main || '#000';
+
+          return (
+            <Box
+              key={label}
+              ref={isSelected ? selectedColorRef : null}
               onClick={() => onChange(value)}
-              endIcon={label === color ? <Check /> : null}
-              data-testid={label === color ? 'selected-color' : null}
+              data-testid={isSelected ? 'selected-color' : null}
+              sx={{
+                position: 'relative',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                // Larger touch target for mobile
+                minWidth: { xs: 56, sm: 48 },
+                minHeight: { xs: 72, sm: 64 },
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                // Mobile-friendly tap feedback
+                touchAction: 'manipulation',
+                '&:active': {
+                  transform: 'scale(0.95)',
+                },
+                '&:hover': {
+                  '@media (hover: hover)': {
+                    transform: 'scale(1.05)',
+                  },
+                },
+              }}
             >
-              {label}
-            </Button>
-          </li>
-        ))}
-      </ul>
+              {/* Color Circle */}
+              <Box
+                sx={{
+                  width: { xs: 48, sm: 44 }, // Larger on mobile
+                  height: { xs: 48, sm: 44 },
+                  borderRadius: '50%',
+                  backgroundColor: colorValue,
+                  border: isSelected ? '4px solid #fff' : '3px solid rgba(255,255,255,0.3)',
+                  boxShadow: isSelected
+                    ? `0 0 0 2px ${colorValue}, 0 4px 12px rgba(0,0,0,0.3)`
+                    : '0 2px 6px rgba(0,0,0,0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                  // Ensure minimum touch target size
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: { xs: 56, sm: 48 }, // 44px minimum for accessibility
+                    height: { xs: 56, sm: 48 },
+                    borderRadius: '50%',
+                    zIndex: -1,
+                  },
+                }}
+              >
+                {isSelected && (
+                  <Check
+                    sx={{
+                      color: (ascentTheme.palette as any)[label]?.contrastText || '#fff',
+                      fontSize: { xs: 22, sm: 20 }, // Slightly larger on mobile
+                      fontWeight: 'bold',
+                      filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.5))',
+                    }}
+                  />
+                )}
+              </Box>
+
+              {/* Color Label */}
+              <Typography
+                variant="caption"
+                sx={{
+                  display: 'block',
+                  textAlign: 'center',
+                  mt: { xs: 0.75, sm: 0.5 },
+                  color: 'rgba(255,255,255,0.9)',
+                  fontSize: { xs: '0.8rem', sm: '0.75rem' }, // Larger text on mobile
+                  fontWeight: isSelected ? 600 : 400,
+                  textTransform: 'capitalize',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                  lineHeight: 1.2,
+                  // Prevent text selection on mobile
+                  userSelect: 'none',
+                }}
+              >
+                {label}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
     </ThemeProvider>
   );
 }
 
 function ColorPickerScroller({ colors, color, onChange }: ColorPickerProps) {
-  const selectedColorRef = React.useRef<HTMLLIElement | null>(null);
+  const selectedColorRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     selectedColorRef.current?.scrollIntoView({
       behavior: 'auto',
-      block: 'center',
+      block: 'nearest',
     });
   }, []);
 
   return (
     <Box
       sx={{
-        maxHeight: '19rem',
-        overflowY: 'scroll',
+        maxHeight: '200px',
+        overflowY: 'auto',
+        borderRadius: 1,
+        border: '1px solid rgba(255,255,255,0.2)',
+        backgroundColor: 'rgba(255,255,255,0.05)',
+
+        // Modern scrollbar (Firefox)
+        scrollbarWidth: 'thin',
+        scrollbarColor: 'rgba(255,255,255,0.3) rgba(255,255,255,0.1)',
+
+        // Webkit fallback for older browsers
+        '&::-webkit-scrollbar': {
+          width: 6,
+        },
+        '&::-webkit-scrollbar-track': {
+          backgroundColor: 'rgba(255,255,255,0.1)',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(255,255,255,0.3)',
+          borderRadius: 3,
+          '&:hover': {
+            backgroundColor: 'rgba(255,255,255,0.5)',
+          },
+        },
       }}
     >
       <ColorPicker
@@ -76,22 +184,11 @@ function ColorPickerScroller({ colors, color, onChange }: ColorPickerProps) {
         colors={colors}
         onChange={onChange}
       />
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 0,
-          width: '100%',
-          height: '2rem',
-          background: 'linear-gradient(to bottom, transparent, rgba(57,57,57,1))',
-          pointerEvents: 'none',
-        }}
-      >
-      </Box>
     </Box>
   );
 }
 
-export default function AscentForm({ slots, slotProps, ascentForm, validationErrors, onCancel }) {
+export default function AscentForm({ slots, slotProps, ascentForm, validationErrors, onCancel }: any) {
   const { form, extras, inputs } = ascentForm;
   const [isLoading, handleSubmit] = useVisitFormSubmit();
   const [tries, setTries] = useState(Number(inputs.tries.defaultValue) || 0);
@@ -121,11 +218,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
     setSelectedTags([]);
   };
 
-  const handleChangeCompleted = (event: SelectChangeEvent) => {
-    setCompleted(event.target.checked);
-  };
-
-  const handleChangeNotes = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeNotes = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNotes(event.target.value);
   };
 
@@ -143,12 +236,14 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
 
   const handleSubmitWithFormClear = {
     onSubmit(event: React.FormEvent<HTMLFormElement>) {
-      handleSubmit.onSubmit(event)
-        .then((visitMetaData) => {
-          if (visitMetaData.redirected) {
-            clearForm();
-          }
-        });
+      if ('onSubmit' in handleSubmit) {
+        handleSubmit.onSubmit(event)
+          .then((visitMetaData: any) => {
+            if (visitMetaData?.redirected) {
+              clearForm();
+            }
+          });
+      }
     },
   };
 
@@ -220,7 +315,11 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
             {/* Completed? */}
             <FieldBase {...withoutDefaultValues(inputs.completed)} label="Topped?" errorKey="completed">
               <Box>
-                <Checkbox {...withoutDefaultValues(inputs.completed)} checked={completed} onChange={handleChangeCompleted} />
+                <Checkbox
+                  {...withoutDefaultValues(inputs.completed)}
+                  checked={completed}
+                  onChange={(event) => setCompleted(event.target.checked)}
+                />
               </Box>
             </FieldBase>
 
@@ -251,7 +350,6 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
             )}
 
             <TextArea
-              fullWidth
               rows={4}
               {...withoutDefaultValues(inputs.notes)}
               label="Notes (Optional)"
