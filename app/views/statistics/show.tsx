@@ -7,13 +7,14 @@ import SessionsByDayChart from '@javascript/applications/main/components/Session
 import SessionsByIntentChart from '@javascript/applications/main/components/SessionsByIntentChart';
 import ToppedRateChart from '@javascript/applications/main/components/ToppedRateChart';
 import ToppedRateOverTimeChart from '@javascript/applications/main/components/ToppedRateOverTimeChart';
+import TrainingHeatmapChart from '@javascript/applications/main/components/TrainingHeatmapChart';
 import { Layout } from '@javascript/applications/main/components/Layout';
 import { Box, Typography } from '@mui/material';
 import { useContent } from '@thoughtbot/superglue';
 import React from 'react';
 
 export default function StatisticsShow() {
-  const { avgTries, toppedRateOverTime, climbsOverTime, toppedRate, flashRate, ascentsPerSession, sessionsByIntent, sessionsByDayOfWeek } = useContent() as any;
+  const { avgTries, toppedRateOverTime, climbsOverTime, toppedRate, flashRate, ascentsPerSession, sessionsByIntent, sessionsByDayOfWeek, trainingHeatmap } = useContent() as any;
 
   return (
     <Layout>
@@ -26,6 +27,7 @@ export default function StatisticsShow() {
         <AscentsPerSessionChart ascentsPerSession={ascentsPerSession} />
         <SessionsByIntentChart sessionsByIntent={sessionsByIntent} />
         <SessionsByDayChart sessionsByDayOfWeek={sessionsByDayOfWeek} />
+        <TrainingHeatmapChart trainingHeatmap={trainingHeatmap} />
         <ToppedRateChart toppedRate={toppedRate} />
         <FlashRateChart flashRate={flashRate} />
         <AvgTriesChart avgTries={avgTries} />

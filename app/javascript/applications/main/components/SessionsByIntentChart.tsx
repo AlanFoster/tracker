@@ -26,7 +26,7 @@ export default function SessionsByIntentChart({ sessionsByIntent }: Props) {
   const data = sessionsByIntent.map(({ intent, count }, i) => ({
     id: intent,
     value: count,
-    label: intent.charAt(0).toUpperCase() + intent.slice(1),
+    label: `${intent.charAt(0).toUpperCase() + intent.slice(1)} (${i})`,
     color: intentColors[i % intentColors.length],
   }));
 

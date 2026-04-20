@@ -163,3 +163,34 @@ json.sessionsByDayOfWeek do
     json.count counts_by_day[day] || 0
   end
 end
+
+json.trainingHeatmap do
+  # Create a heatmap showing ascents by day of week and hour of day
+  days = %w[Monday Tuesday Wednesday Thursday Friday Saturday Sunday]
+  hours = (0..23).to_a
+
+  # Initialize the heatmap data structure
+  heatmap_data = {}
+  days.each do |day|
+    heatmap_data[day] = {}
+    hours.each { |hour| heatmap_data[day][hour] = 0 }
+  end
+
+  # Populate with actual ascent data (when climbs actually happened)
+  Current.user.sessions.joins(:ascents).pluck('ascents.created_at').each do |created_at|
+    day_name = created_at.strftime('%A')
+    hour = created_at.hour
+    heatmap_data[day_name][hour] += 1
+  end
+
+  # Convert to array format for the frontend
+  json.array! days do |day|
+    json.day day
+    json.hours do
+      json.array! hours do |hour|
+        json.hour hour
+        json.count heatmap_data[day][hour]
+      end
+    end
+  end
+end
