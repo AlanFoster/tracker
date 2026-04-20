@@ -48,6 +48,7 @@ function ColorPicker({ colors, color, onChange, selectedColorRef }: ColorPickerP
               ref={isSelected ? selectedColorRef : null}
               onClick={() => onChange(value)}
               data-testid={isSelected ? 'selected-color' : null}
+              data-color={label}
               sx={{
                 position: 'relative',
                 cursor: 'pointer',
@@ -299,6 +300,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
                 >
                   <Box
                     onClick={handleTriesDecrement}
+                    aria-label="Decrease"
                     sx={{
                       flex: 1,
                       display: 'flex',
@@ -318,7 +320,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
                     <IconButton
                       disabled={tries <= 0}
                       className="icon-button"
-                      sx={{
+                       sx={{
                         width: { xs: 48, sm: 40 },
                         height: { xs: 48, sm: 40 },
                         border: '1px solid',
@@ -363,6 +365,7 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
 
                   <Box
                     onClick={handleTriesIncrement}
+                    aria-label="Increase"
                     sx={{
                       flex: 1,
                       display: 'flex',
@@ -400,9 +403,10 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
 
             {/* Topped Section */}
             <Box>
-              <FieldBase fullWidth {...withoutDefaultValues(inputs.completed)} label="Topped?" errorKey="completed">
+              <FieldBase fullWidth {...withoutDefaultValues(inputs.completed)} label="Topped" errorKey="completed">
                 <Box
                   onClick={() => setCompleted(!completed)}
+                  data-testid='topped'
                   sx={{
                     display: 'flex',
                     alignItems: 'center',

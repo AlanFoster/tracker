@@ -42,7 +42,7 @@ RSpec.describe "Data Exports", type: :feature do
       expect(page).to have_content 'Failed'
 
       # Verify creation time is displayed
-      expect(page).to have_content 'Apr 19, 2026'
+      expect(page).to have_content Date.today.strftime("%b %d, %Y")
     end
 
     it "prevents multiple concurrent exports" do

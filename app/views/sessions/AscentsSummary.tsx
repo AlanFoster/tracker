@@ -10,14 +10,26 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-export default function AscentsSummary({ ascentCounts }) {
-  const summary = ascentCounts.map(ascentCount => ({
+interface AscentCount {
+  title: string;
+  value: number;
+  color: string;
+  change?: string;
+}
+
+interface AscentsSummaryProps {
+  ascentCounts: AscentCount[];
+}
+
+export default function AscentsSummary({ ascentCounts }: AscentsSummaryProps) {
+  const summary = ascentCounts.map((ascentCount: AscentCount) => ({
     title: ascentCount.title,
     value: ascentCount.value,
     color: ascentCount.color,
+    change: ascentCount.change,
     icon: (
       <ThemeProvider theme={ascentTheme}>
-        <RocketLaunch color={ascentCount.color} fontSize="large" />
+        <RocketLaunch color={ascentCount.color as any} fontSize="large" />
       </ThemeProvider>
     ),
   }));
@@ -29,7 +41,7 @@ export default function AscentsSummary({ ascentCounts }) {
       spacing={2}
       gap={2}
     >
-      {summary.map(item => (
+      {summary.map((item) => (
         <Grid size={{ xs: 6, sm: 4, md: 3 }} data-testid={`ascents-summary-${item.color}`} key={item.title}>
           <Card
             sx={{

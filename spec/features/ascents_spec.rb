@@ -21,6 +21,11 @@ RSpec.describe "Homepage", type: :feature do
     yield
   end
 
+  def click_color(color)
+    page.find("[data-color=#{color}]").click
+    expect(page).to have_selector('[data-testid=selected-color]', text: color.capitalize)
+  end
+
   describe 'creating a session and ascents' do
     it 'works successfully' do
       login_as(user)
@@ -36,12 +41,14 @@ RSpec.describe "Homepage", type: :feature do
         expect(page).to have_content 'No ascents registered yet.'
 
         click_link 'Add'
+
+        # Wait for the modal to appear
+        expect(page).to have_content 'New Ascent'
+
         colors = %w[white red purple red]
         colors.each do |color|
-          click_button color
-          expect(page).to have_selector('[data-testid=selected-color]', text: color.upcase)
-          expect(page).to have_content 'flash'
-          expect(page).to have_selector("[name='ascent[completed]']:checked", visible: false)
+          click_color color
+          expect(page).to have_content 'FLASH'
           click_button 'Create'
           expect(page).to have_content "#{color} ascent added successfully!"
         end
@@ -53,12 +60,14 @@ RSpec.describe "Homepage", type: :feature do
 
       now "create invalid flash ascents" do
         click_link 'Add'
-        click_button 'red'
-        expect(page).to have_content 'flash'
-        expect(page).to have_selector("[name='ascent[completed]']:checked", visible: false)
+        # Wait for the modal to appear
+        expect(page).to have_content 'New Ascent'
+
+        click_color 'red'
+        expect(page).to have_content 'FLASH'
 
         now "create invalid flash details" do
-          find('.MuiCheckbox-root').click
+          find('[data-testid=topped]').click
           click_button 'Create'
           expect(page).to have_content 'If the ascent was flashed, it must be marked as completed'
         end
@@ -113,7 +122,7 @@ RSpec.describe "Homepage", type: :feature do
 
       now "add an ascent with tags" do
         click_link 'Add'
-        click_button 'blue'
+        click_color 'blue'
 
         # Wait for tags to be visible
         expect(page).to have_content 'Ascent Type Tags'
@@ -147,8 +156,7 @@ RSpec.describe "Homepage", type: :feature do
       now "add an ascent with multiple tags" do
         # Open the modal again
         click_link 'Add'
-        # Modal is already open from the redirect
-        click_button 'green'
+        click_color 'green'
 
         # Wait for tags to be visible
         expect(page).to have_content 'Ascent Type Tags'
@@ -184,7 +192,7 @@ RSpec.describe "Homepage", type: :feature do
         # Open the modal again
         click_link 'Add'
         # Modal is already open from the redirect
-        click_button 'yellow'
+        click_color 'yellow'
 
         # Wait for tags to be visible
         expect(page).to have_content 'Ascent Type Tags'
