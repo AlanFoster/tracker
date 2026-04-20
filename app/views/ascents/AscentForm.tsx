@@ -288,36 +288,53 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
                 <Box
                   sx={{
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: 'stretch',
                     justifyContent: 'space-between',
                     p: 2,
                     borderRadius: 2,
                     border: '1px solid',
                     borderColor: 'divider',
+                    minHeight: 80,
                   }}
                 >
-                  <IconButton
+                  <Box
                     onClick={handleTriesDecrement}
-                    disabled={tries <= 0}
                     sx={{
-                      width: 40,
-                      height: 40,
-                      border: '1px solid',
-                      borderColor: tries <= 0 ? 'action.disabled' : 'primary.main',
-                      color: tries <= 0 ? 'action.disabled' : 'primary.main',
-                      '&:hover': {
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: tries <= 0 ? 'not-allowed' : 'pointer',
+                      opacity: tries <= 0 ? 0.5 : 1,
+                      transition: 'all 0.15s ease',
+                      py: 2,
+                      my: -2,
+                      '&:hover .icon-button': {
                         backgroundColor: tries <= 0 ? 'transparent' : 'primary.main',
                         color: tries <= 0 ? 'action.disabled' : 'primary.contrastText',
                       },
-                      '&:disabled': {
-                        borderColor: 'action.disabled',
-                        color: 'action.disabled',
-                      },
-                      transition: 'all 0.15s ease',
                     }}
                   >
-                    <RemoveIcon fontSize="small" />
-                  </IconButton>
+                    <IconButton
+                      disabled={tries <= 0}
+                      className="icon-button"
+                      sx={{
+                        width: { xs: 48, sm: 40 },
+                        height: { xs: 48, sm: 40 },
+                        border: '1px solid',
+                        borderColor: tries <= 0 ? 'action.disabled' : 'primary.main',
+                        color: tries <= 0 ? 'action.disabled' : 'primary.main',
+                        pointerEvents: 'none', // Let parent handle clicks
+                        transition: 'all 0.15s ease',
+                        '&:disabled': {
+                          borderColor: 'action.disabled',
+                          color: 'action.disabled',
+                        },
+                      }}
+                    >
+                      <RemoveIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
 
                   <Box sx={{ textAlign: 'center', flex: 1, mx: 2 }}>
                     <Typography
@@ -344,24 +361,39 @@ export default function AscentForm({ slots, slotProps, ascentForm, validationErr
                     </Typography>
                   </Box>
 
-                  <IconButton
+                  <Box
                     onClick={handleTriesIncrement}
                     sx={{
-                      width: 40,
-                      height: 40,
-                      backgroundColor: 'primary.main',
-                      border: '1px solid',
-                      borderColor: 'primary.main',
-                      color: 'primary.contrastText',
-                      '&:hover': {
+                      flex: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                      py: 2,
+                      my: -2,
+                      '&:hover .icon-button': {
                         backgroundColor: 'primary.dark',
                         borderColor: 'primary.dark',
                       },
-                      transition: 'all 0.15s ease',
                     }}
                   >
-                    <AddIcon fontSize="small" />
-                  </IconButton>
+                    <IconButton
+                      className="icon-button"
+                      sx={{
+                        width: { xs: 48, sm: 40 },
+                        height: { xs: 48, sm: 40 },
+                        backgroundColor: 'primary.main',
+                        border: '1px solid',
+                        borderColor: 'primary.main',
+                        color: 'primary.contrastText',
+                        pointerEvents: 'none', // Let parent handle clicks
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <AddIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </Box>
               </FieldBase>
             </Box>
