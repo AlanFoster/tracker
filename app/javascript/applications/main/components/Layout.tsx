@@ -206,7 +206,7 @@ export function Flash({ flash }) {
           >
             {flash.notice}
             {flash.createdAt && (
-              <Typography variant="caption" sx={{ ml: 1, opacity: 0.8 }}>
+              <Typography variant="caption" component="div" sx={{ opacity: 0.8 }}>
                 ({timeAgo})
               </Typography>
             )}
